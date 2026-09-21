@@ -64,7 +64,8 @@ test("段階移動、キーボード、範囲外URL、TCP直接アクセス", as
     "data-step",
     "version-s",
   );
-  await page.getByRole("link", { name: "TCP", exact: true }).click();
+  await page.getByRole("button", { name: "プロトコルを探す" }).click();
+  await page.getByRole("link", { name: /^TCP/ }).click();
   await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn");
   await page.goBack();
   await expect(page.locator(".scene")).toHaveAttribute(

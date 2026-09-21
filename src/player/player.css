@@ -1,0 +1,274 @@
+.phases {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+.phases button {
+  flex: 1;
+  min-width: 0;
+  background: #192338;
+  border: 2px solid #354460;
+  font-size: 12px;
+  padding: 4px;
+  color: #a6bfd0;
+  box-shadow: 0 3px #080e1c;
+}
+.phases button span {
+  font:
+    10px Consolas,
+    monospace;
+  margin-right: 8px;
+}
+.phases button[aria-current] {
+  color: #f6cd78;
+  border-color: #f6cd78;
+  background: #302d2c;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #192338;
+  border-top: 3px solid #080e1c;
+}
+.controls button,
+.dialog-head button {
+  border: 2px solid #526b8d;
+  background: #263650;
+  box-shadow: 3px 3px #080e1c;
+  padding: 8px 14px;
+  font-size: 12px;
+  min-height: 36px;
+}
+.controls .next {
+  background: #8ff0b4;
+  border-color: #c5ffcf;
+  color: #152c27;
+}
+.controls button:hover:not(:disabled),
+.phases button:hover {
+  border-color: #f6cd78;
+}
+.progress {
+  background: #080e1c;
+}
+.progress span {
+  display: block;
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    #8ff0b4 0 12px,
+    #233a38 12px 16px
+  );
+}
+dialog {
+  width: min(620px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 24px;
+  border: 4px solid #a6bfd0;
+  background: #1c2d37;
+  color: #e2e9ef;
+  box-shadow: 6px 6px #080e1c;
+  overflow: auto;
+}
+dialog::backdrop {
+  background: #080e1cce;
+}
+.dialog-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+dialog h2 {
+  font-size: 20px;
+}
+dialog code {
+  color: #f6cd78;
+  overflow-wrap: anywhere;
+}
+dialog p,
+dialog li {
+  font-size: 14px;
+  line-height: 1.9;
+}
+dialog a,
+.protection {
+  color: #8ff0b4;
+}
+.model-note {
+  border-top: 2px solid #526b8d;
+  padding-top: 12px;
+  color: #a6bfd0;
+}
+@media (max-width: 650px) and (orientation: portrait) {
+  .counter {
+    font-size: 16px;
+  }
+  .counter small {
+    font-size: 10px;
+  }
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+  .phases button {
+    font-size: 10px;
+  }
+  .phases button span {
+    margin-right: 4px;
+  }
+  .controls {
+    gap: 5px;
+    padding: 6px;
+  }
+  .controls button {
+    font-size: 10px;
+    padding: 6px;
+    min-height: 32px;
+  }
+  .controls button span {
+    display: none;
+  }
+}
+@media (orientation: landscape) and (max-height: 480px) {
+  .controls button {
+    padding: 4px 10px;
+    min-height: 28px;
+  }
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 120px));
+  justify-content: center;
+}
+.controls button {
+  width: 100%;
+  height: 36px;
+  min-height: 0;
+  padding: 4px;
+  white-space: nowrap;
+}
+@media (max-width: 650px) {
+  .controls {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .controls button {
+    height: 32px;
+    font-size: 10px;
+    padding: 2px;
+  }
+}
+@media (orientation: landscape) and (max-height: 480px) {
+  .controls button {
+    height: 28px;
+  }
+}
+.flow-overview {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 24px 8px;
+  color: #a6bfd0;
+}
+.flow-overview summary {
+  height: 32px;
+  line-height: 28px;
+  cursor: pointer;
+  font-size: 12px;
+  border-top: 2px solid #526b8d;
+}
+.flow-overview summary span {
+  float: right;
+  font:
+    11px/28px Consolas,
+    monospace;
+}
+.flow-overview summary:focus-visible {
+  outline: 2px solid #f6cd78;
+  outline-offset: 2px;
+}
+.flow-hint {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.flow-overview ol {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+.flow-overview li + li {
+  margin-top: 4px;
+}
+.flow-overview li button {
+  display: grid;
+  grid-template-columns: 32px 100px minmax(0, 1fr) 128px 28px;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 12px;
+  background: #192338;
+  border: 2px solid #354460;
+  font-size: 12px;
+}
+.flow-overview li button:hover {
+  border-color: #a6bfd0;
+}
+.flow-overview li button[aria-current] {
+  border-color: #f6cd78;
+  background: #302d2c;
+}
+.flow-number,
+.flow-current {
+  color: #f6cd78;
+}
+.flow-copy strong {
+  display: block;
+  color: #e2e9ef;
+  font-weight: normal;
+}
+.flow-copy code {
+  display: block;
+  font:
+    11px Consolas,
+    monospace;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+.flow-direction {
+  font-size: 10px;
+}
+@media (max-width: 650px) {
+  .flow-overview {
+    padding: 0 8px 8px;
+  }
+  .flow-overview li button {
+    grid-template-columns: 24px minmax(0, 1fr) 28px;
+    gap: 6px;
+    padding: 8px;
+  }
+  .flow-phase {
+    grid-column: 2;
+    font-size: 10px;
+  }
+  .flow-copy {
+    grid-column: 2;
+  }
+  .flow-direction {
+    grid-column: 2;
+  }
+  .flow-current {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+@media (orientation: landscape) and (max-height: 480px) {
+  .controls {
+    padding: 0 6px;
+  }
+}

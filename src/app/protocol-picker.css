@@ -1,0 +1,130 @@
+.protocol-trigger {
+  margin-left: auto;
+  flex-shrink: 0;
+  border: 2px solid #526b8d;
+  padding: 5px 9px;
+  background: #192338;
+  color: #8ff0b4;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.protocol-trigger:hover {
+  border-color: #8ff0b4;
+}
+.protocol-picker {
+  width: min(620px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 20px;
+  overflow: hidden;
+}
+.protocol-picker[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.picker-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.picker-heading h2 {
+  margin: 0;
+  font-size: 20px;
+}
+.picker-heading button {
+  border: 1px solid #526b8d;
+  padding: 6px 8px;
+  background: #192338;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.protocol-picker label {
+  font-size: 12px;
+  color: #a6bfd0;
+}
+.protocol-picker input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 40px;
+  flex-shrink: 0;
+  border: 2px solid #526b8d;
+  border-radius: 0;
+  background: #101522;
+  color: #e2e9ef;
+  font: inherit;
+  padding: 8px 10px;
+}
+.protocol-picker input:focus-visible {
+  outline: 2px solid #f6cd78;
+  outline-offset: 2px;
+}
+.protocol-picker .picker-count {
+  margin: 0;
+  font-size: 12px;
+  color: #a6bfd0;
+}
+.picker-results {
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  gap: 8px;
+  padding: 4px;
+}
+.picker-results a {
+  display: grid;
+  gap: 6px;
+  border: 2px solid #354460;
+  padding: 12px;
+  background: #192338;
+}
+.picker-results a:hover,
+.picker-results a:focus-visible {
+  border-color: #8ff0b4;
+}
+.picker-results a[aria-current] {
+  border-color: #f6cd78;
+}
+.picker-name {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+.picker-name small {
+  color: #f6cd78;
+  font-weight: normal;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.picker-description {
+  color: #a6bfd0;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.protocol-picker .picker-empty {
+  margin: 0;
+  font-size: 13px;
+}
+@media (max-width: 650px) {
+  .protocol-trigger {
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+  .protocol-picker {
+    padding: 12px;
+    gap: 8px;
+  }
+}
+@media (orientation: landscape) and (max-height: 480px) {
+  .protocol-picker[open] {
+    gap: 6px;
+    padding: 12px;
+  }
+  .picker-heading h2 {
+    font-size: 16px;
+  }
+}

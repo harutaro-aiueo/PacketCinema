@@ -138,9 +138,10 @@ test("SSHコマンドを入力し、クリック停止・再開を経てTCP接�
 test("端末内の全処理が進行し、停止でき、通信と同じウィンドウ位置を使う", async ({
   page,
 }) => {
-  const { sshSteps } = await import("../src/ssh");
+  const { ssh } = await import("../../src/protocols/ssh");
+  const sshSteps = ssh.scenarios.find(s => s.id === ssh.defaultScenarioId)!.steps;
   await page.clock.install();
-  for (const step of sshSteps.filter((s) => s.from === s.to)) {
+  for (const step of sshSteps.filter((s) => s.kind === "local")) {
     const i = sshSteps.indexOf(step);
     await page.goto(`/#/ssh?step=${i}`);
     await page.reload();

@@ -1,17 +1,19 @@
-import { lessons } from "./lessons";
-import type { Actor, Step } from "./model";
+import type { Step, StepContent } from "../../../domain/lesson";
+import { createConnection, createDisconnection } from "../../tcp";
+import { transport, service, authSteps, session } from "../fragments/messages";
+import { makeStep } from "../fragments/step";
 const secure = "暗号化・完全性保護あり";
 function step(
   id: string,
   phase: string,
   title: string,
   wire: string,
-  from: Actor,
-  to: Actor,
+  from: string,
+  to: string,
   description: string,
   protection = secure,
 ): Step {
-  return {
+  return makeStep({
     id,
     phase,
     title,
@@ -21,16 +23,26 @@ function step(
     description,
     protection,
     fields: [wire],
-    source: id === "disconnect" ? "https://www.rfc-editor.org/rfc/rfc4253#section-11.1" : id.startsWith("pty") ? "https://www.rfc-editor.org/rfc/rfc4254#section-6.2" : id === "whoami" || id === "exit-data" ? "https://www.rfc-editor.org/rfc/rfc4254#section-5.2" : "https://www.rfc-editor.org/rfc/rfc4254#section-6.5",
-  };
+    source:
+      id === "disconnect"
+        ? "https://www.rfc-editor.org/rfc/rfc4253#section-11.1"
+        : id.startsWith("pty")
+          ? "https://www.rfc-editor.org/rfc/rfc4254#section-6.2"
+          : id === "whoami" || id === "exit-data"
+            ? "https://www.rfc-editor.org/rfc/rfc4254#section-5.2"
+            : "https://www.rfc-editor.org/rfc/rfc4254#section-6.5",
+  });
 }
-const original = lessons[0].steps("publickey");
-const existing = (
-  id: string,
+
+function existing(
+  id: keyof typeof session,
   phase: string,
-  changes: Partial<Step> = {},
-): Step => ({ ...original.find((s) => s.id === id)!, phase, ...changes });
-export const sshSteps: Step[] = [
+  changes: Partial<StepContent> = {},
+): Step {
+  const value = { ...session[id], phase, ...changes };
+  return { ...value, displayWire: value.wire.replace("SSH_MSG_", "") };
+}
+export const interactiveSteps: Step[] = [
   step(
     "command",
     "SSH接続開始",
@@ -41,16 +53,16 @@ export const sshSteps: Step[] = [
     "端末で接続先とユーザー名を指定します。まずサーバーのTCPポート22への接続を始めます。",
     "端末内の操作",
   ),
-  ...lessons[1].steps("publickey").map((s) => ({ ...s, phase: "TCP接続" })),
-  ...original
-    .slice(
-      0,
-      original.findIndex((s) => s.id === "channel-open"),
-    )
-    .map((s) => ({
-      ...s,
-      phase: s.phase === "ユーザー認証" ? "公開鍵認証" : "鍵交換",
-    })),
+  ...createConnection({ phase: "TCP接続" }),
+  ...[
+    ...transport,
+    ...service,
+    ...authSteps.publickey,
+    session["auth-success"],
+  ].map((s) => ({
+    ...s,
+    phase: s.phase === "ユーザー認証" ? "公開鍵認証" : "鍵交換",
+  })),
   existing("channel-open", "コマンド操作"),
   existing("channel-confirm", "コマンド操作"),
   step(
@@ -151,53 +163,9 @@ export const sshSteps: Step[] = [
     "server",
     "クライアントがSSH接続の終了を通知する例です。この後、下位のTCP接続を閉じます。",
   ),
-  ...(
-    [
-      [
-        "fin-c",
-        "TCPの送信終了を伝える",
-        "FIN + ACK",
-        "client",
-        "server",
-        "クライアントが、これ以上データを送らないことをTCPのFINで伝えます。",
-      ],
-      [
-        "fin-ack",
-        "クライアントのFINを確認する",
-        "ACK",
-        "server",
-        "client",
-        "サーバーがFINの受信を確認します。反対方向はまだ終了していません。",
-      ],
-      [
-        "fin-s",
-        "サーバーも送信を終了する",
-        "FIN + ACK",
-        "server",
-        "client",
-        "サーバーもFINを送り、自分からのデータ送信を終了します。",
-      ],
-      [
-        "last-ack",
-        "最後のFINを確認する",
-        "ACK",
-        "client",
-        "server",
-        "クライアントが確認応答を返します。サーバーはCLOSEDとなり、クライアントはTIME-WAITに入ります。",
-      ],
-    ] as const
-  ).map(([id, title, wire, from, to, description]) => ({
-    ...step(
-      id,
-      "切断",
-      title,
-      wire,
-      from,
-      to,
-      description,
-      "TCP制御情報（SSH暗号化の対象外）",
-    ),
-    source: "https://www.rfc-editor.org/rfc/rfc9293#section-3.6",
+  ...createDisconnection({ phase: "切断" }).map((step) => ({
+    ...step,
+    protection: "TCP制御情報（SSH暗号化の対象外）",
   })),
   step(
     "done",

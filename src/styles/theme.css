@@ -1,0 +1,35 @@
+:root {
+  font-family: "MS Gothic", "Yu Gothic", Consolas, monospace;
+  color: #e2e9ef;
+  background: #101522;
+  color-scheme: dark;
+  font-synthesis: none;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+  color: inherit;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid #f6cd78;
+  outline-offset: 2px;
+}

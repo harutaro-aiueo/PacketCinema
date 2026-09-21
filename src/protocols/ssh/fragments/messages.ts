@@ -1,36 +1,9 @@
-import type { Actor, Lesson, Step } from "./model";
+import { s } from "./step";
 const r = (n: number, section: string) =>
-  `https://www.rfc-editor.org/rfc/rfc${n}#section-${section}`;
-function s(
-  id: string,
-  phase: string,
-  title: string,
-  wire: string,
-  from: Actor,
-  to: Actor,
-  description: string,
-  fields: string[],
-  protection: string,
-  source: string,
-  states?: [string, string],
-): Step {
-  return {
-    id,
-    phase,
-    title,
-    wire,
-    from,
-    to,
-    description,
-    fields,
-    protection,
-    source,
-    states,
-  };
-}
+  "https://www.rfc-editor.org/rfc/rfc" + n + "#section-" + section;
 const plain = "暗号化前";
 const secure = "暗号化・完全性保護あり";
-const transport = [
+export const transport = [
   s(
     "version-c",
     "接続の準備",
@@ -156,7 +129,7 @@ const transport = [
     r(4253, "7.3"),
   ),
 ];
-const service = [
+export const service = [
   s(
     "service-request",
     "ユーザー認証",
@@ -182,7 +155,7 @@ const service = [
     r(4253, "10"),
   ),
 ];
-const authSteps = {
+export const authSteps = {
   publickey: [
     s(
       "key-query",
@@ -248,8 +221,8 @@ const authSteps = {
     ),
   ],
 };
-const session = [
-  s(
+export const session = {
+  "auth-success": s(
     "auth-success",
     "ユーザー認証",
     "ユーザー認証が成功する",
@@ -261,7 +234,7 @@ const session = [
     secure,
     r(4252, "5.1"),
   ),
-  s(
+  "channel-open": s(
     "channel-open",
     "コマンド実行",
     "セッション用チャネルを開く",
@@ -277,7 +250,7 @@ const session = [
     secure,
     r(4254, "5.1"),
   ),
-  s(
+  "channel-confirm": s(
     "channel-confirm",
     "コマンド実行",
     "チャネルを受け付ける",
@@ -292,7 +265,7 @@ const session = [
     secure,
     r(4254, "5.1"),
   ),
-  s(
+  exec: s(
     "exec",
     "コマンド実行",
     "whoamiの実行を依頼する",
@@ -307,7 +280,7 @@ const session = [
     secure,
     r(4254, "6.5"),
   ),
-  s(
+  "exec-ok": s(
     "exec-ok",
     "コマンド実行",
     "実行要求を受け付ける",
@@ -319,7 +292,7 @@ const session = [
     secure,
     r(4254, "5.4"),
   ),
-  s(
+  output: s(
     "output",
     "結果と終了",
     "コマンドの出力を受け取る",
@@ -331,7 +304,7 @@ const session = [
     secure,
     r(4254, "5.2"),
   ),
-  s(
+  "exit-status": s(
     "exit-status",
     "結果と終了",
     "終了コードを受け取る",
@@ -343,7 +316,7 @@ const session = [
     secure,
     r(4254, "6.10"),
   ),
-  s(
+  eof: s(
     "eof",
     "結果と終了",
     "サーバーからのデータ終了を通知する",
@@ -355,7 +328,7 @@ const session = [
     secure,
     r(4254, "5.3"),
   ),
-  s(
+  "close-s": s(
     "close-s",
     "結果と終了",
     "チャネルを閉じる",
@@ -367,7 +340,7 @@ const session = [
     secure,
     r(4254, "5.3"),
   ),
-  s(
+  "close-c": s(
     "close-c",
     "結果と終了",
     "チャネル終了に応答する",
@@ -379,84 +352,4 @@ const session = [
     secure,
     r(4254, "5.3"),
   ),
-];
-export const lessons: Lesson[] = [
-  {
-    id: "ssh",
-    title: "SSH",
-    subtitle: "安全な接続ができるまで",
-    layer: "APPLICATION",
-    actors: ["クライアント", "SSHサーバー"],
-    topics: "公開鍵認証 / パスワード認証",
-    example: "ssh learner@server whoami",
-    connection: "TCP : 22",
-    authPhase: "ユーザー認証",
-    prerequisites: [
-      { lesson: "tcp", label: "TCP接続済み", linkLabel: "TCP接続の詳細" },
-    ],
-    notes: [
-      "SSH 2.0の正常系を示す教育用モデルです。各矢印は論理メッセージであり、TCPパケットと一対一ではありません。",
-      "鍵交換はcurve25519-sha256、ホスト鍵とユーザー鍵は別々のEd25519鍵を使う例です。暗号の推奨設定一覧ではありません。",
-      "拡張交渉、認証方式の探索、再鍵交換、ウィンドウ調整、失敗系、TCP切断は省略しています。実装によりメッセージや順序は異なります。",
-    ],
-    steps: (auth) => [...transport, ...service, ...authSteps[auth], ...session],
-  },
-  {
-    id: "tcp",
-    title: "TCP",
-    subtitle: "3ウェイハンドシェイク",
-    layer: "TRANSPORT",
-    actors: ["クライアント", "サーバー"],
-    topics: "SYN / SYN + ACK / ACK",
-    example: "Client → Server",
-    connection: "TCP CONNECTION",
-    startCondition: "サーバーはLISTEN、クライアントはCLOSEDから接続を開始",
-    prerequisites: [],
-    notes: [
-      "通常の能動オープン・受動オープンの成功例です。状態は各メッセージを受信・処理した後を示します。",
-      "初期シーケンス番号1000・5000は説明用です。SYNは番号を1つ消費し、データを含まないACKは消費しません。",
-      "オプション、再送、同時オープン、接続失敗、データ転送、切断は省略しています。",
-    ],
-    steps: () => [
-      s(
-        "syn",
-        "接続の確立",
-        "接続を始めたいと伝える",
-        "SYN",
-        "client",
-        "server",
-        "クライアントが初期シーケンス番号1000を通知します。待ち受け中のサーバーはこれを受け取り、応答を用意します。",
-        ["SYN=1 / ACK=0", "SEQ=1000 / ACK番号は無効"],
-        "暗号化の機能なし",
-        r(9293, "3.5"),
-        ["SYN-SENT", "SYN-RECEIVED"],
-      ),
-      s(
-        "syn-ack",
-        "接続の確立",
-        "受け取りを確認し、自分の番号も伝える",
-        "SYN + ACK",
-        "server",
-        "client",
-        "サーバーは次に1001を期待すると伝え、自分の初期番号5000も通知します。クライアントは受信するとESTABLISHEDへ進みます。",
-        ["SYN=1 / ACK=1", "SEQ=5000 / ACK=1001"],
-        "暗号化の機能なし",
-        r(9293, "3.5"),
-        ["ESTABLISHED", "SYN-RECEIVED"],
-      ),
-      s(
-        "ack",
-        "接続の確立",
-        "応答の受け取りを確認する",
-        "ACK",
-        "client",
-        "server",
-        "クライアントが次に5001を期待すると返します。サーバーも受信するとESTABLISHEDになり、双方で接続が確立します。TCPの接続確立だけでは通信は暗号化されません。",
-        ["SYN=0 / ACK=1", "SEQ=1001 / ACK=5001"],
-        "暗号化の機能なし",
-        r(9293, "3.5"),
-        ["ESTABLISHED", "ESTABLISHED"],
-      ),
-    ],
-  },
-];
+};
