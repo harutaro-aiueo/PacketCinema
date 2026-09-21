@@ -1,129 +1,143 @@
 import { test, expect } from "@playwright/test";
-test("一覧からSSHを開き、表示・方式を切り替え、TCPから復帰できる", async ({
+test("操作せずSSHの開始から終了まで連続再生し最後で止まる", async ({
   page,
 }) => {
-  await page.goto("/");
-  await page
-    .getByRole("link")
-    .filter({ hasText: "公開鍵認証 / パスワード認証" })
-    .click();
-  await expect(
-    page.getByRole("heading", { name: "対応するSSHバージョンを伝える" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "次のステップ", exact: true }).click();
-  await page.getByRole("button", { name: "技術的な詳細", exact: true }).click();
-  await expect(page.locator(".technical")).toContainText(
-    "SSH-2.0-example_server",
-  );
-  await page.getByLabel("認証方式").selectOption("password");
-  await expect(
-    page.getByRole("heading", { name: "ユーザー認証サービスを要求する" }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", {
-      name: "12. 暗号化された通信路でパスワードを送る",
-      exact: true,
-    })
-    .click();
-  await expect(page.locator(".protection")).toContainText(
-    "暗号化・完全性保護あり",
-  );
-  const original = page.url();
-  await page.getByRole("button", { name: "TCP接続の詳細" }).click();
-  await expect(
-    page.getByRole("heading", { name: "接続を始めたいと伝える" }),
-  ).toBeVisible();
-  await page.reload();
-  await page.getByRole("button", { name: "SSHの続きに戻る" }).click();
-  await expect(page).toHaveURL(original);
-  await expect(page.getByLabel("認証方式")).toHaveValue("password");
-  await expect(page.locator(".technical")).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "▶ 再生", exact: true }),
-  ).toBeVisible();
-});
-test("再生と停止、速度変更、終端、キーボード操作", async ({ page }) => {
-  await page.goto("/#/tcp");
+  test.setTimeout(120000);
   await page.clock.install();
-  await page.getByRole("button", { name: "▶ 再生", exact: true }).click();
-  await page.clock.runFor(1200);
-  const x = await page.locator(".packet").getAttribute("cx");
-  expect(Number(x)).toBeGreaterThan(115);
-  await page.getByRole("button", { name: "Ⅱ 停止", exact: true }).click();
-  const pausedX = await page.locator(".packet").getAttribute("cx");
-  await page.clock.runFor(4000);
-  expect(await page.locator(".packet").getAttribute("cx")).toBe(pausedX);
-  await page.getByLabel("再生速度").selectOption("2");
-  await page.getByRole("button", { name: "▶ 再生", exact: true }).click();
-  await page.clock.runFor(5000);
-  await expect(
-    page.getByRole("button", { name: "次のステップ", exact: true }),
-  ).toBeDisabled();
-  await expect(
-    page.getByRole("button", { name: "▶ 再生", exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "最初に戻る", exact: true }).click();
+  await page.goto("/");
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "command");
+  const seen: string[] = [];
+  for (let i = 0; i < 40; i++) {
+    seen.push((await page.locator(".scene").getAttribute("data-step"))!);
+    await page.clock.fastForward(6050);
+  }
+  expect(new Set(seen).size).toBe(40);
+  expect(seen).toContain("key-sign");
+  expect(seen).toContain("exit-data");
+  expect(seen.at(-1)).toBe("done");
+  await expect(page.getByRole("status")).toHaveText("再生完了");
+  await page.clock.runFor(12000);
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "done");
+  await page.getByRole("button", { name: "最初から" }).click();
+  await page.clock.runFor(6100);
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn");
+});
+test("公開鍵認証から操作・切断まで全ステップを手動で進める", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.locator(".callout h2").click();
+  const ids: string[] = [];
+  const next = page.getByRole("button", { name: "次へ" });
+  for (let i = 0; i < 60; i++) {
+    ids.push((await page.locator(".scene").getAttribute("data-step"))!);
+    await expect(page.locator(".callout h2")).toBeVisible();
+    if (await next.isDisabled()) break;
+    await next.click();
+  }
+  expect(ids[0]).toBe("command");
+  expect(ids.at(-1)).toBe("done");
+  expect(ids.indexOf("newkeys-s")).toBeLessThan(ids.indexOf("key-sign"));
+  expect(ids.indexOf("shell-ok")).toBeLessThan(ids.indexOf("whoami"));
+  expect(ids.indexOf("output")).toBeLessThan(ids.indexOf("exit-data"));
+  expect(ids.indexOf("close-c")).toBeLessThan(ids.indexOf("fin-c"));
+  expect(ids).not.toContain("password");
+  await expect(page.locator(".packet")).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "done");
+  await page.getByRole("button", { name: "最初から" }).click();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "command");
+});
+test("段階移動、キーボード、範囲外URL、TCP直接アクセス", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/#/ssh?step=999");
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "done");
+  await page.getByRole("button", { name: "03鍵交換" }).click();
+  await expect(page.locator(".scene")).toHaveAttribute(
+    "data-step",
+    "version-c",
+  );
   await page.locator("h1").click();
   await page.keyboard.press("ArrowRight");
-  await expect(page.locator(".counter")).toContainText("02");
-  await page.keyboard.press("ArrowLeft");
-  await expect(page.locator(".counter")).toContainText("01");
-  await page.keyboard.press("Space");
-  await expect(
-    page.getByRole("button", { name: "Ⅱ 停止", exact: true }),
-  ).toBeVisible();
-});
-test("再生中の詳細切り替えを維持し、最後のステップでもその場で停止できる", async ({
-  page,
-}) => {
-  await page.goto("/#/tcp");
-  await page.clock.install();
-  await page.getByRole("button", { name: "▶ 再生", exact: true }).click();
-  await page.getByRole("button", { name: "技術的な詳細", exact: true }).click();
-  await page.clock.runFor(3500);
-  await expect(page.locator(".technical")).toBeVisible();
-  await expect(page.locator(".counter")).toContainText("02");
-  await page.clock.runFor(3100);
-  await expect(page.locator(".counter")).toContainText("03");
-  await page.getByRole("button", { name: "Ⅱ 停止", exact: true }).click();
-  await expect(page.locator(".counter")).toContainText("03");
-});
-test("直接アクセス、範囲外ステップ、履歴、動きを減らす設定", async ({
-  page,
-}) => {
-  await page.goto("/#/ssh?step=999&auth=password&detail=1");
-  await expect(
-    page.getByRole("heading", { name: "チャネル終了に応答する" }),
-  ).toBeVisible();
-  await page.getByLabel("動きを減らす").check();
-  await expect(page.locator(".packet")).toHaveCount(0);
-  await page.getByRole("button", { name: "TCP接続の詳細" }).click();
+  await expect(page.locator(".scene")).toHaveAttribute(
+    "data-step",
+    "version-s",
+  );
+  await page.getByRole("link", { name: "TCP", exact: true }).click();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn");
   await page.goBack();
-  await expect(
-    page.getByRole("heading", { name: "チャネル終了に応答する" }),
-  ).toBeVisible();
-  await page.goto("/#/missing");
-  await expect(page.getByRole("status")).toContainText("見つかりません");
+  await expect(page.locator(".scene")).toHaveAttribute(
+    "data-step",
+    "version-s",
+  );
 });
-for (const width of [390, 1280])
-  test(`幅${width}で図と詳細に欠落がない`, async ({ page }) => {
+for (const width of [320, 390, 1280])
+  test(`幅${width}で解説と操作が収まる`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/#/ssh?step=16&detail=1");
-    await expect(page.locator(".technical")).toBeVisible();
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/#/ssh?step=9");
+    await expect(page.locator(".callout")).toBeVisible();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
-    await page
-      .getByRole("button", { name: "次のステップ", exact: true })
-      .scrollIntoViewIfNeeded();
-    await expect(
-      page.getByRole("button", { name: "次のステップ", exact: true }),
-    ).toBeInViewport();
-    await page.evaluate(() => scrollTo(0, 0));
+    const bounds = await page.locator(".callout").boundingBox();
+    expect(bounds!.x).toBeGreaterThanOrEqual(0);
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
     await page.screenshot({
-      path: `test-results/ssh-${width}.png`,
+      path: `test-results/ssh-redesign-${width}.png`,
       fullPage: true,
     });
   });
+
+test("移動中も解説が表示され、クリックでその位置に停止し再開する", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto("/#/ssh?step=1");
+  await page.clock.runFor(1200);
+  await expect(page.locator(".callout p")).toBeVisible();
+  await page.locator(".callout h2").click();
+  await expect(page.getByRole("status")).toHaveText("一時停止");
+  const p = await page.locator(".packet").getAttribute("data-progress");
+  expect(Number(p)).toBeGreaterThan(0);
+  expect(Number(p)).toBeLessThan(1);
+  await page.clock.runFor(10000);
+  await expect(page.locator(".packet")).toHaveAttribute("data-progress", p!);
+  await page.locator(".callout h2").click();
+  await page.clock.runFor(600);
+  expect(
+    Number(await page.locator(".packet").getAttribute("data-progress")),
+  ).toBeGreaterThan(Number(p));
+  await page.locator("h1").click();
+  await page.keyboard.press("Space");
+  await expect(page.getByRole("status")).toHaveText("一時停止");
+  await page.getByRole("button", { name: "もう一度" }).click();
+  await expect(page.getByRole("status")).toHaveText("送信中");
+  await page.clock.runFor(5200);
+  await expect(page.getByRole("button", { name: "次へ" })).toBeEnabled();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn");
+});
+
+test("端末内の処理と到着後も停止でき、停止中の段階移動で勝手に再開しない", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto("/");
+  await page.locator(".callout h2").click();
+  await page.clock.runFor(20000);
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "command");
+  await page.getByRole("button", { name: "次へ" }).click();
+  await page.clock.runFor(20000);
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn");
+  await page.locator(".callout h2").click();
+  await page.clock.runFor(5200);
+  await page.locator(".callout h2").click();
+  await page.clock.runFor(20000);
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn");
+  await page.locator(".callout h2").click();
+  await page.clock.runFor(1000);
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn-ack");
+});
