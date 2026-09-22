@@ -45,10 +45,26 @@ test("picker suspends the clock and restores focus and the prior playback state"
   );
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();
-  await page.clock.runFor(500);
-  expect(
-    Number(await page.locator(".packet").getAttribute("data-progress")),
-  ).toBeGreaterThan(Number(progress));
+  await expect(
+    page.getByRole("dialog", { name: "教材を探す" }),
+  ).not.toBeVisible();
+  // Native dialog close events and React effects settle between clock advances.
+  const frozenProgress = Number(progress);
+  let resumedProgress = frozenProgress;
+  for (
+    let attempt = 0;
+    attempt < 4 && resumedProgress <= frozenProgress;
+    attempt++
+  ) {
+    await page.clock.runFor(250);
+    await page.evaluate(
+      () => new Promise<void>((resolve) => queueMicrotask(resolve)),
+    );
+    resumedProgress = Number(
+      await page.locator(".packet").getAttribute("data-progress"),
+    );
+  }
+  expect(resumedProgress).toBeGreaterThan(frozenProgress);
   await page.locator(".callout h2").click();
   await trigger.click();
   await page.getByRole("link", { name: /^SSH/ }).click();
