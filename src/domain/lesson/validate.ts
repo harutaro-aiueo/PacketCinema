@@ -24,7 +24,38 @@ export function validateScenario(scenario: Scenario): void {
     `${context} steps`,
   );
   const nodes = new Set(scenario.nodes.map((node) => node.id));
+  const links = scenario.topology?.links ?? [];
+  unique(
+    links.map((link) => link.id),
+    `${context} links`,
+  );
+  if (scenario.topology) {
+    requireValue(
+      scenario.nodes.length === 3 && links.length === 3,
+      `${context}: triangle needs three nodes and links`,
+    );
+    const pairs = new Set<string>();
+    for (const link of links) {
+      requireValue(
+        nodes.has(link.from) &&
+          nodes.has(link.to) &&
+          link.from !== link.to &&
+          link.label.trim(),
+        `${context}: invalid link`,
+      );
+      pairs.add([link.from, link.to].sort().join("/"));
+    }
+    requireValue(pairs.size === 3, `${context}: duplicate topology edge`);
+  }
   for (const step of scenario.steps) {
+    requireValue(
+      Object.entries(step.linkStates ?? {}).every(
+        ([id, state]) =>
+          links.some((link) => link.id === id) &&
+          ["pending", "forwarding", "blocked", "down"].includes(state),
+      ),
+      `${context}/${step.id}: invalid link state`,
+    );
     requireValue(
       step.title.trim() &&
         step.phase.trim() &&

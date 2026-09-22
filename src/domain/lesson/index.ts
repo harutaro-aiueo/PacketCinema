@@ -31,6 +31,9 @@ export interface StepContent {
   protection: string;
   source: string;
   states?: Readonly<Record<string, string>>;
+  linkStates?: Readonly<
+    Record<string, "pending" | "forwarding" | "blocked" | "down">
+  >;
 }
 
 export type Step = StepContent &
@@ -45,6 +48,10 @@ export interface Scenario {
   badge: string;
   sceneLabel: string;
   nodes: readonly LessonNode[];
+  topology?: {
+    kind: "triangle";
+    links: readonly { id: string; from: string; to: string; label: string }[];
+  };
   prerequisites: readonly { protocol: string; label: string }[];
   notes: readonly string[];
   steps: readonly Step[];

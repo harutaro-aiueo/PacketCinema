@@ -11,6 +11,8 @@ npm run dev
 
 表示されたローカルURLを開いてください。SSHは `#/ssh`、TCP単独の接続例は `#/tcp` でも直接開けます。
 
+STP教材は「教材を探す」でSTP・スパニングツリー・ループ防止を検索するか、`#/stp` から開けます。3台のスイッチによるBPDU交換、ルート選出、ポートの役割、Listening／Learning／Forwarding、リンク断後の再収束を16ステップで追えます。従来のIEEE 802.1Dを扱い、待機時間は短縮しています。各場面の詳細に出典と省略事項を記載しています。
+
 ## SSHの流れと操作
 
 `ssh learner@server` → TCP接続 → 鍵交換 → 公開鍵認証 → 対話シェル → `whoami` → 結果 → `exit` → SSH・TCP切断。

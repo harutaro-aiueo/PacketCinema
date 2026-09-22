@@ -2,6 +2,7 @@ import type React from "react";
 import { direction, type Scenario, type Step } from "../domain/lesson";
 import { twoNodeLayout } from "./layouts/twoNode";
 import { LocalEffect } from "./effects/LocalEffect";
+import { Topology } from "./Topology";
 export function Scene({
   scenario,
   current,
@@ -24,7 +25,15 @@ export function Scene({
   children: React.ReactNode;
 }) {
   const local = current.kind === "local";
-  const layout = twoNodeLayout(scenario, current, progress);
+  const topology = !!scenario.topology;
+  const layout = topology
+    ? {
+        side: "client",
+        travel: 0,
+        active: current.kind === "local" ? current.node : current.from,
+        arrived: progress >= 5 / 6,
+      }
+    : twoNodeLayout(scenario, current, progress);
   const side = layout.side,
     x = layout.travel;
   const summary = current.description.split("。")[0] + "。";
@@ -50,40 +59,46 @@ export function Scene({
         <span role="status">{status}</span>
       </div>
       <div
-        className={`stage ${!finished ? "can-pause" : ""}`}
+        className={`stage ${topology ? "topology-stage" : ""} ${!finished ? "can-pause" : ""}`}
         onClick={() => {
           if (!finished && !window.getSelection()?.toString()) onTogglePause();
         }}
       >
-        <div className="actors">
-          {scenario.nodes.map((node, i) => (
-            <div
-              key={node.id}
-              className={
-                "actor " +
-                (i === 0 ? "client" : "server") +
-                " " +
-                (layout.active === node.id ? "active" : "")
-              }
-            >
-              <img className="device" src={node.image} alt="" />
-              <strong>{node.label}</strong>
-              <small>{node.caption}</small>
+        {topology ? (
+          <Topology scenario={scenario} current={current} progress={progress} />
+        ) : (
+          <>
+            <div className="actors">
+              {scenario.nodes.map((node, i) => (
+                <div
+                  key={node.id}
+                  className={
+                    "actor " +
+                    (i === 0 ? "client" : "server") +
+                    " " +
+                    (layout.active === node.id ? "active" : "")
+                  }
+                >
+                  <img className="device" src={node.image} alt="" />
+                  <strong>{node.label}</strong>
+                  <small>{node.caption}</small>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="wire">
-          <div className="route" />
-          {!local && (
-            <span
-              className="packet"
-              data-progress={progress}
-              style={{ "--travel": `${x}%` } as React.CSSProperties}
-            >
-              <img src="./pixels/packet.svg" alt="" />
-            </span>
-          )}
-        </div>
+            <div className="wire">
+              <div className="route" />
+              {!local && (
+                <span
+                  className="packet"
+                  data-progress={progress}
+                  style={{ "--travel": `${x}%` } as React.CSSProperties}
+                >
+                  <img src="./pixels/packet.svg" alt="" />
+                </span>
+              )}
+            </div>
+          </>
+        )}
         <div
           className={`callout ${side} ${local ? "local-step" : ""}`}
           aria-live="polite"

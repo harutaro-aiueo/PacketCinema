@@ -1,5 +1,7 @@
 import type { Scenario, Step } from "../../domain/lesson";
 export function assertSupportedLayout(scenario: Scenario): void {
+  if (scenario.topology?.kind === "triangle" && scenario.nodes.length === 3)
+    return;
   if (scenario.nodes.length !== 2)
     throw new Error(
       "Two-node renderer requires exactly 2 nodes: " + scenario.id,
@@ -10,7 +12,7 @@ export function twoNodeLayout(
   step: Step,
   progress: number,
 ) {
-  assertSupportedLayout(scenario);
+  if (scenario.nodes.length !== 2) throw new Error("Expected two nodes");
   const source = step.kind === "local" ? step.node : step.from;
   const arrived = step.kind === "local" || progress >= 5 / 6;
   const active = step.kind === "local" || !arrived ? source : step.to;

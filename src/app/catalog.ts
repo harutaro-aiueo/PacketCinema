@@ -3,6 +3,7 @@ import { validateProtocols } from "../domain/lesson/validate";
 import { assertSupportedLayout } from "../visualization/layouts/twoNode";
 import { ssh } from "../protocols/ssh";
 import { tcp } from "../protocols/tcp";
+import { stp } from "../protocols/stp";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -31,4 +32,5 @@ export function createCatalog(
 export const catalog = createCatalog([
   { protocol: ssh, publishedScenarioIds: ["interactive"] },
   { protocol: tcp, publishedScenarioIds: ["handshake"] },
+  { protocol: stp, publishedScenarioIds: ["convergence"] },
 ]);
