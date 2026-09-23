@@ -12,7 +12,7 @@ test("new protocol with arbitrary node IDs plays without shared UI changes", asy
   page,
 }) => {
   await page.clock.install();
-  await page.goto("/tests/fixtures/player.html");
+  await page.goto("/tests/fixtures/player.html#/example");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "架空プロトコル",
   );

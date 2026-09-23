@@ -4,7 +4,7 @@ test("searches names and purposes, handles no matches, and navigates", async ({
   page,
 }) => {
   await page.clock.install();
-  await page.goto("/");
+  await page.goto("/#/ssh");
   await expect(page.locator(".masthead nav")).toHaveCount(0);
   await page.getByRole("button", { name: "プロトコルを探す" }).click();
   const dialog = page.getByRole("dialog", { name: "教材を探す" });
@@ -88,7 +88,7 @@ for (const [width, height] of [
     async ({ page }) => {
       await page.setViewportSize({ width, height });
       await page.clock.install();
-      await page.goto("/tests/fixtures/player.html?many=1");
+      await page.goto("/tests/fixtures/player.html?many=1#/example");
       await expect(page.locator(".masthead")).not.toContainText("教材 60");
       await page.getByRole("button", { name: "プロトコルを探す" }).click();
       const dialog = page.getByRole("dialog", { name: "教材を探す" });

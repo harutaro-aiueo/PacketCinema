@@ -42,9 +42,9 @@ for (const size of landscapeSizes) {
       "CLIENT",
       "SERVER",
     ]);
-    expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(
-      size.height,
-    );
+    expect(
+      await page.evaluate(() => document.documentElement.scrollHeight),
+    ).toBeLessThanOrEqual(size.height);
     await page.screenshot({ path: test.info().outputPath("mid-transit.png") });
 
     const networkPosition = { x: callout!.x, y: callout!.y };
