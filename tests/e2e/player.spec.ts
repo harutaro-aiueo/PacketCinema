@@ -4,7 +4,7 @@ test("操作せずSSHの開始から終了まで連続再生し最後で止ま�
 }) => {
   test.setTimeout(120000);
   await page.clock.install();
-  await page.goto("/");
+  await page.goto("/#/ssh");
   await expect(page.locator(".scene")).toHaveAttribute("data-step", "command");
   const seen: string[] = [];
   for (let i = 0; i < 40; i++) {
@@ -26,7 +26,7 @@ test("公開鍵認証から操作・切断まで全ステップを手動で進�
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await page.goto("/#/ssh");
   await page.locator(".callout h2").click();
   const ids: string[] = [];
   const next = page.getByRole("button", { name: "次へ" });
@@ -126,7 +126,7 @@ test("端末内の処理と到着後も停止でき、停止中の段階移動�
   page,
 }) => {
   await page.clock.install();
-  await page.goto("/");
+  await page.goto("/#/ssh");
   await page.locator(".callout h2").click();
   await page.clock.runFor(20000);
   await expect(page.locator(".scene")).toHaveAttribute("data-step", "command");

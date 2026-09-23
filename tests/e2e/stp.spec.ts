@@ -5,7 +5,7 @@ test("STP is searchable and BPDU playback pauses and resumes", async ({
   page,
 }) => {
   await page.clock.install();
-  await page.goto("/");
+  await page.goto("/#/ssh");
   await page.getByRole("button", { name: "プロトコルを探す" }).click();
   await page.getByRole("searchbox").fill("ループ防止");
   await page.getByRole("link", { name: /^STP/ }).click();

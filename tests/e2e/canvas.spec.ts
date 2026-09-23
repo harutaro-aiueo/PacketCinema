@@ -10,7 +10,7 @@ for (const [width, height] of [
     page,
   }) => {
     await page.setViewportSize({ width, height });
-    await page.goto("/");
+    await page.goto("/#/ssh");
     await page.locator(".callout h2").click();
     await expect(page.getByRole("checkbox")).toHaveCount(0);
     await expect(page.locator(".controls button")).toHaveText([
@@ -113,7 +113,7 @@ test("SSHコマンドを入力し、クリック停止・再開を経てTCP接�
   page,
 }) => {
   await page.clock.install();
-  await page.goto("/");
+  await page.goto("/#/ssh");
   await expect(
     page.getByRole("button", { name: "01SSH接続開始" }),
   ).toBeVisible();
@@ -139,7 +139,9 @@ test("端末内の全処理が進行し、停止でき、通信と同じウィ�
   page,
 }) => {
   const { ssh } = await import("../../src/protocols/ssh");
-  const sshSteps = ssh.scenarios.find(s => s.id === ssh.defaultScenarioId)!.steps;
+  const sshSteps = ssh.scenarios.find(
+    (s) => s.id === ssh.defaultScenarioId,
+  )!.steps;
   await page.clock.install();
   for (const step of sshSteps.filter((s) => s.kind === "local")) {
     const i = sshSteps.indexOf(step);

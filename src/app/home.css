@@ -1,0 +1,44 @@
+.home {
+  max-width: 640px;
+  margin: auto;
+  padding: 72px 24px;
+}
+.home h1 {
+  margin: 0 0 40px;
+  font-size: clamp(28px, 6vw, 36px);
+}
+.home-lessons {
+  display: grid;
+  gap: 12px;
+}
+.home-card {
+  display: block;
+  padding: 20px 24px;
+  border: 1px solid #35435b;
+  border-radius: 4px;
+  font-size: 20px;
+  color: #8ff0b4;
+}
+.home-card:hover {
+  border-color: #8ff0b4;
+  background: #151e2e;
+}
+.home-back {
+  color: #a6bfd0;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.home-back:hover {
+  color: #8ff0b4;
+}
+@media (max-width: 400px) {
+  .home-back {
+    font-size: 16px;
+  }
+  .home-back span {
+    display: none;
+  }
+  .masthead {
+    gap: 6px;
+  }
+}

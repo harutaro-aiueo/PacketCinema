@@ -8,8 +8,9 @@ import { Details } from "../player/components/Details";
 import { Overview } from "../player/components/Overview";
 import { Phases } from "../player/components/Phases";
 import { ProtocolPicker } from "./ProtocolPicker";
+import { Home } from "./Home";
 import { Scene } from "../visualization/Scene";
-export function App({
+function LessonPlayer({
   catalog = defaultCatalog,
   defaultProtocolId = "ssh",
 }: {
@@ -56,6 +57,9 @@ export function App({
     <>
       <main className="terminal-app">
         <header className="masthead">
+          <a className="home-back" href="#/" aria-label="トップページへ戻る">
+            ← <span>トップ</span>
+          </a>
           <h1>{scenario.title}</h1>
           <span className="auth-badge">{scenario.badge}</span>
           <button
@@ -112,5 +116,22 @@ export function App({
         pause={() => playback.setPaused(true)}
       />
     </>
+  );
+}
+
+export function App(props: {
+  catalog?: readonly ProtocolDefinition[];
+  defaultProtocolId?: string;
+}) {
+  const [hash, setHash] = useState(() => location.hash);
+  useEffect(() => {
+    const onHashChange = () => setHash(location.hash);
+    addEventListener("hashchange", onHashChange);
+    return () => removeEventListener("hashchange", onHashChange);
+  }, []);
+  return ["", "#", "#/"].includes(hash) ? (
+    <Home catalog={props.catalog ?? defaultCatalog} />
+  ) : (
+    <LessonPlayer {...props} />
   );
 }
