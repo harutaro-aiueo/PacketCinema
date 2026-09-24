@@ -6,11 +6,13 @@ export function Home({ catalog }: { catalog: readonly ProtocolDefinition[] }) {
     <main className="home">
       <h1>PacketCinema</h1>
       <nav className="home-lessons" aria-label="教材一覧">
-        {catalog.map((protocol) => (
-          <a className="home-card" href={"#/" + protocol.id} key={protocol.id}>
-            {protocol.title}
-          </a>
-        ))}
+        {[...catalog]
+          .sort((a, b) => a.title.localeCompare(b.title))
+          .map((protocol) => (
+            <a className="home-card" href={"#/" + protocol.id} key={protocol.id}>
+              {protocol.title}
+            </a>
+          ))}
       </nav>
     </main>
   );
