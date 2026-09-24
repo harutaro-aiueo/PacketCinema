@@ -9,6 +9,7 @@
 
 - 教材追加・シナリオ拡張：`.agents/skills/packetcinema-add-protocol/SKILL.md`。
 - 教材の技術レビュー・画面レビュー：`.agents/skills/packetcinema-review/SKILL.md`。
+- 教材説明・画面文言の日本語推敲：`.agents/skills/packetcinema-plain-japanese/SKILL.md`。
 - 設計・依存関係の変更：[設計文書](docs/architecture.md)と`tests/contracts/dependencies.test.ts`。
 - 描画変更：`src/visualization/`。再生・操作変更：`src/player/`。
 - 教材登録・URL変更：`src/app/catalog.ts`と`src/app/routing/`。

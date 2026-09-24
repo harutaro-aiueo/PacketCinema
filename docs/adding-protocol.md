@@ -52,6 +52,8 @@ defaultScenarioIdは必ず公開対象に含めます。公開しないシナリ
 
 3ノードの三角形では、`topology.links` に一意なID・from/to・labelを持つ3本のリンクを定義します。各ステップの `linkStates` でリンクIDに `pending`・`forwarding`・`blocked`・`down` を指定し、`states` でノードの状態ラベルを指定できます。途中のURLからも復元できるよう、その場面の状態をすべて記述します。例は `src/protocols/stp/scenarios/convergence.ts` を参照してください。
 
+構成図にノードごとの固定情報を表示する場合は `topology.nodeDetails`、ステップごとに変わる情報は `step.topologyAnnotations.nodeDetails` にノードIDをキーとして指定します。リンク両端のポート役割などは `step.topologyAnnotations.portRoles` にリンクIDをキーとして指定し、`from` と `to` に各端の表示文字列を設定します。不要な場面では省略できます。
+
 それ以外の配置や新しい演出が必要な場合に限り、共通の描画機能を追加します。その際も分岐はプロトコル名ではなく、レイアウトや演出の種類を基準にします。
 
 検索付き一覧にはdescriptionを短い用途説明として表示します。keywordsに日本語の用途や別名を指定すると、プロトコル名を知らなくても探せます。未指定の場合もプロトコル名・ID・公開シナリオの見出しで検索できます。
