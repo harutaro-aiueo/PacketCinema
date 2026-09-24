@@ -61,6 +61,33 @@ it("keeps the redundant segment blocked until failure and both transition states
     ),
   ).toBe(true);
 });
+it("shows bridge IDs, root path costs, and port roles on the topology", () => {
+  expect(scenario.topology?.nodeDetails).toMatchObject({
+    a: expect.stringContaining("BID 32768"),
+    b: expect.stringContaining("BID 32768"),
+    c: expect.stringContaining("BID 32768"),
+  });
+  const step = (id: string) => scenario.steps.find((item) => item.id === id)!;
+  expect(step("port-roles").topologyAnnotations).toEqual({
+    nodeDetails: {
+      a: "Root cost 0",
+      b: "Root cost 4",
+      c: "Root cost 4",
+    },
+    portRoles: {
+      ab: { from: "DP", to: "RP" },
+      ac: { from: "DP", to: "RP" },
+      bc: { from: "DP", to: "Blocking" },
+    },
+  });
+  expect(step("recovered").topologyAnnotations?.nodeDetails?.c).toBe(
+    "Root cost 8",
+  );
+  expect(step("recovered").topologyAnnotations?.portRoles?.bc).toEqual({
+    from: "DP",
+    to: "RP",
+  });
+});
 it("rejects malformed topology and unknown link states", () => {
   expect(() =>
     validateScenario({

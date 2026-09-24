@@ -51,11 +51,32 @@ export function Topology({
             >
               <title>
                 {link.label}: {label}
+                {current.topologyAnnotations?.portRoles?.[link.id]
+                  ? ` · ${link.from}側 ${current.topologyAnnotations.portRoles[link.id].from} / ${link.to}側 ${current.topologyAnnotations.portRoles[link.id].to}`
+                  : ""}
               </title>
               <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} />
               <text x={(a.x + b.x) / 2} y={(a.y + b.y) / 2 - 7}>
                 {label}
               </text>
+              {current.topologyAnnotations?.portRoles?.[link.id] && (
+                <>
+                  <text
+                    className="topology-port-role"
+                    x={a.x + (b.x - a.x) * 0.28}
+                    y={a.y + (b.y - a.y) * 0.28 - 8}
+                  >
+                    {current.topologyAnnotations.portRoles[link.id].from}
+                  </text>
+                  <text
+                    className="topology-port-role"
+                    x={a.x + (b.x - a.x) * 0.72}
+                    y={a.y + (b.y - a.y) * 0.72 - 8}
+                  >
+                    {current.topologyAnnotations.portRoles[link.id].to}
+                  </text>
+                </>
+              )}
             </g>
           );
         })}
@@ -66,10 +87,24 @@ export function Topology({
             transform={`translate(${positions[i].x},${positions[i].y})`}
           >
             <title>
-              {node.caption}: {current.states?.[node.id] ?? "選出前"}
+              {scenario.topology?.nodeDetails?.[node.id] ?? node.caption}
+              {current.topologyAnnotations?.nodeDetails?.[node.id]
+                ? ` · ${current.topologyAnnotations.nodeDetails[node.id]}`
+                : ""}
+              {` · ${current.states?.[node.id] ?? "選出前"}`}
             </title>
-            <rect x="-27" y="-19" width="54" height="38" rx="3" />
-            <text y="-2">{node.label}</text>
+            <rect x="-37" y="-26" width="74" height="52" rx="3" />
+            <text y="-10">{node.label}</text>
+            {scenario.topology?.nodeDetails?.[node.id] && (
+              <text className="topology-node-detail" y="2">
+                {scenario.topology.nodeDetails[node.id]}
+              </text>
+            )}
+            {current.topologyAnnotations?.nodeDetails?.[node.id] && (
+              <text className="topology-node-detail" y="14">
+                {current.topologyAnnotations.nodeDetails[node.id]}
+              </text>
+            )}
           </g>
         ))}
         {current.kind === "message" && (
