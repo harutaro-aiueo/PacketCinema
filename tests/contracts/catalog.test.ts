@@ -9,11 +9,12 @@ import { tcp } from "../../src/protocols/tcp";
 import { example, threeNode } from "../fixtures/example";
 it("validates published and unpublished scenarios", () =>
   expect(() => validateProtocols([ssh, tcp])).not.toThrow());
-it("publishes current SSH, TCP and STP scenarios", () =>
+it("publishes the available protocol scenarios", () =>
   expect(catalog.map((p) => [p.id, p.scenarios.map((s) => s.id)])).toEqual([
     ["ssh", ["interactive"]],
     ["tcp", ["handshake"]],
     ["stp", ["convergence"]],
+    ["https", ["tls13-http11"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
