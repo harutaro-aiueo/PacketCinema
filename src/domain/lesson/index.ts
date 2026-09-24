@@ -34,6 +34,10 @@ export interface StepContent {
   linkStates?: Readonly<
     Record<string, "pending" | "forwarding" | "blocked" | "down">
   >;
+  topologyAnnotations?: {
+    nodeDetails?: Readonly<Record<string, string>>;
+    portRoles?: Readonly<Record<string, { from: string; to: string }>>;
+  };
 }
 
 export type Step = StepContent &
@@ -51,6 +55,7 @@ export interface Scenario {
   topology?: {
     kind: "triangle";
     links: readonly { id: string; from: string; to: string; label: string }[];
+    nodeDetails?: Readonly<Record<string, string>>;
   };
   prerequisites: readonly { protocol: string; label: string }[];
   notes: readonly string[];

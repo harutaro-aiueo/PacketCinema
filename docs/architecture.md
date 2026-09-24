@@ -53,7 +53,7 @@ TCPのcreateConnection/createDisconnectionはノード対応、段階名、ID接
 
 教材モデルと検証は3ノード以上を扱えます。現在の描画はnodesの先頭・2番目を画面上の2位置に配置します。CSSのclient/serverは配置用の既存クラスで、ノードIDではありません。
 
-`topology.kind: "triangle"` を持つ3ノード教材は、`visualization/Topology.tsx` で描画します。3本のリンク上をメッセージが移動し、ステップの `linkStates` と `states` からリンクとノードの状態を表示します。通常の2ノード教材は既存の配置を使い、それ以外の構成は公開時に拒否します。描画の分岐は教材名に依存しません。
+`topology.kind: "triangle"` を持つ3ノード教材は、`visualization/Topology.tsx` で描画します。3本のリンク上をメッセージが移動し、ステップの `linkStates` と `states` からリンクとノードの状態を表示します。構成図には `topology.nodeDetails` で固定のノード情報を、`step.topologyAnnotations` でステップごとのノード情報とリンク両端のラベルを表示できます。通常の2ノード教材は既存の配置を使い、それ以外の構成は公開時に拒否します。描画の分岐は教材名に依存しません。
 
 同時通信、実行時の分岐、実パケット取得、外部プラグイン、シナリオ選択UIは今回の対象外です。
 
