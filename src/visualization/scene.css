@@ -587,6 +587,10 @@
   stroke: #ef8b8b;
   stroke-dasharray: 2 8;
 }
+.topology .topology-port-role {
+  font-size: 8px;
+  fill: #f6cd78;
+}
 .topology-node rect {
   fill: #263650;
   stroke: #a6bfd0;
@@ -597,6 +601,10 @@
 }
 .topology .node-caption {
   font-size: 8px;
+}
+.topology .topology-node-detail {
+  font-size: 7px;
+  fill: #a6bfd0;
 }
 .topology .node-state {
   font-size: 8px;

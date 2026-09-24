@@ -13,6 +13,30 @@ const roles = {
   b: "A側 RP · C側 DP",
   c: "A側 RP · B側 非指定",
 };
+const selectedAnnotations = {
+  nodeDetails: { a: "Root cost 0", b: "Root cost 4", c: "Root cost 4" },
+  portRoles: {
+    ab: { from: "DP", to: "RP" },
+    ac: { from: "DP", to: "RP" },
+    bc: { from: "DP", to: "Blocking" },
+  },
+};
+const failedAnnotations = {
+  nodeDetails: { a: "Root cost 0", b: "Root cost 4", c: "Root cost 4" },
+  portRoles: {
+    ab: { from: "DP", to: "RP" },
+    ac: { from: "DOWN", to: "DOWN" },
+    bc: { from: "DP", to: "Blocking" },
+  },
+};
+const recoveredAnnotations = {
+  nodeDetails: { a: "Root cost 0", b: "Root cost 4", c: "Root cost 8" },
+  portRoles: {
+    ab: { from: "DP", to: "RP" },
+    ac: { from: "DOWN", to: "DOWN" },
+    bc: { from: "DP", to: "RP" },
+  },
+};
 const newRoles = {
   a: "ROOT / DP",
   b: "A側 RP · C側 DP",
@@ -28,6 +52,7 @@ function local(
   fields: string[],
   linkStates: StepContent["linkStates"],
   states?: StepContent["states"],
+  topologyAnnotations?: StepContent["topologyAnnotations"],
 ): Step {
   return {
     id,
@@ -40,6 +65,7 @@ function local(
     fields,
     linkStates,
     states,
+    topologyAnnotations,
     source,
     protection:
       "STPはレイヤー2のループを防ぐ制御です。通信を暗号化したり、BPDUの送信者を認証したりするものではありません。",
@@ -59,6 +85,7 @@ function bpdu(
   description: string,
   linkStates: StepContent["linkStates"],
   states?: StepContent["states"],
+  topologyAnnotations?: StepContent["topologyAnnotations"],
 ): Step {
   return {
     id,
@@ -87,6 +114,7 @@ function bpdu(
     source,
     linkStates,
     states,
+    topologyAnnotations,
   };
 }
 
@@ -112,6 +140,11 @@ export const convergence: Scenario = {
   ],
   topology: {
     kind: "triangle",
+    nodeDetails: {
+      a: "BID 32768…0A",
+      b: "BID 32768…0B",
+      c: "BID 32768…0C",
+    },
     links: [
       { id: "ab", from: "a", to: "b", label: "A–B" },
       { id: "ac", from: "a", to: "c", label: "A–C" },
@@ -121,7 +154,7 @@ export const convergence: Scenario = {
   prerequisites: [],
   notes: [
     "従来のIEEE 802.1D STPを、単一のツリーと3台のスイッチで示す教材です。RSTP・MSTP・PVST+・PortFastの動作は扱いません。",
-    "Bridge IDは優先度とMACアドレス等からなり、この例では A < B < C とします。全リンクの受信ポートコストは4に固定します。RP=ルートポート、DP=指定ポートです。",
+    "図のBIDは優先度32768、MACアドレス末尾0A/0B/0Cの例を短縮表示し、A < B < Cとします。Root Path CostはA=0、B=4、C=4です。各リンクのポートコストは4です。RP=ルートポート、DP=指定ポートです。",
     "BPDU交換は代表的なものを順番に表示します。実機では各リンクで並行・周期的に行われます。線とノードの状態は各場面の処理後の要約で、遮断線は両端ともBlockingという意味ではありません。",
     "タイマー待ちを短縮しています。障害はA–Cの物理リンク断を直ちに検出できる例です。BPDUの途絶だけで検出する場合はMax Age等の待ち時間が加わります。",
     "障害後のTCN・確認応答・TCフラグによるMAC学習情報の短期エージング、リンク復旧、タイブレークの全分岐は省略しています。",
@@ -206,6 +239,7 @@ export const convergence: Scenario = {
       ],
       selected,
       roles,
+      selectedAnnotations,
     ),
     local(
       "listening",
@@ -216,6 +250,7 @@ export const convergence: Scenario = {
       ["Listening：Forward Delay 15秒", "CのB側ポートはBlockingを維持"],
       selected,
       roles,
+      selectedAnnotations,
     ),
     local(
       "learning",
@@ -226,6 +261,7 @@ export const convergence: Scenario = {
       ["Learning：Forward Delay 15秒", "MAC学習あり / データ転送なし"],
       selected,
       roles,
+      selectedAnnotations,
     ),
     local(
       "forwarding",
@@ -240,6 +276,7 @@ export const convergence: Scenario = {
       ],
       stable,
       roles,
+      selectedAnnotations,
     ),
     bpdu(
       "blocked-bpdu",
@@ -250,6 +287,7 @@ export const convergence: Scenario = {
       "BlockingのC側ポートもBPDUを受信し続けます。データを遮断していても制御情報を監視し、トポロジーの変化に備えます。",
       stable,
       roles,
+      selectedAnnotations,
     ),
     local(
       "link-failure",
@@ -260,6 +298,7 @@ export const convergence: Scenario = {
       ["A–C：物理リンクDOWN", "CのB側ポートにはBからのルート情報がある"],
       failed,
       { ...roles, c: "A側 DOWN · 再計算" },
+      failedAnnotations,
     ),
     bpdu(
       "backup-bpdu",
@@ -270,6 +309,7 @@ export const convergence: Scenario = {
       "CはBからのBPDUに基づいてAへの迂回経路を選びます。Cの経路コストは8となり、B側ポートが新しいルートポートになります。",
       recovering,
       newRoles,
+      recoveredAnnotations,
     ),
     local(
       "re-listening",
@@ -280,6 +320,7 @@ export const convergence: Scenario = {
       ["CのB側：Blocking → Listening", "Forward Delay 15秒（教材では短縮）"],
       recovering,
       newRoles,
+      recoveredAnnotations,
     ),
     local(
       "re-learning",
@@ -290,6 +331,7 @@ export const convergence: Scenario = {
       ["CのB側：Listening → Learning", "Forward Delay 15秒（教材では短縮）"],
       recovering,
       newRoles,
+      recoveredAnnotations,
     ),
     local(
       "recovered",
@@ -304,6 +346,7 @@ export const convergence: Scenario = {
       ],
       recovered,
       newRoles,
+      recoveredAnnotations,
     ),
   ],
 };
