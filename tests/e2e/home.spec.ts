@@ -8,7 +8,7 @@ for (const width of [375, 1280]) {
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       "PacketCinema",
     );
-    await expect(page.locator(".home-card")).toHaveCount(3);
+    await expect(page.locator(".home-card")).toHaveCount(4);
     await expect(page.locator(".scene")).toHaveCount(0);
     expect(
       await page.evaluate(
@@ -27,7 +27,7 @@ for (const width of [375, 1280]) {
     await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn");
     await page.goBack();
     await expect(page.locator(".home")).toBeVisible();
-    for (const id of ["ssh", "tcp", "stp"]) {
+    for (const id of ["ssh", "tcp", "stp", "https"]) {
       await page.locator(`.home-card[href="#/${id}"]`).click();
       await expect(page.locator(".scene")).toBeVisible();
       await page.getByRole("link", { name: "トップページへ戻る" }).click();
