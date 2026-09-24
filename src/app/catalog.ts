@@ -4,6 +4,7 @@ import { assertSupportedLayout } from "../visualization/layouts/twoNode";
 import { ssh } from "../protocols/ssh";
 import { tcp } from "../protocols/tcp";
 import { stp } from "../protocols/stp";
+import { https } from "../protocols/https";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -33,4 +34,5 @@ export const catalog = createCatalog([
   { protocol: ssh, publishedScenarioIds: ["interactive"] },
   { protocol: tcp, publishedScenarioIds: ["handshake"] },
   { protocol: stp, publishedScenarioIds: ["convergence"] },
+  { protocol: https, publishedScenarioIds: ["tls13-http11"] },
 ]);
