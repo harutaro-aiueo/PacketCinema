@@ -2,7 +2,7 @@ import type { Step, StepContent } from "../../../domain/lesson";
 import { createConnection, createDisconnection } from "../../tcp";
 import { transport, service, authSteps, session } from "../fragments/messages";
 import { makeStep } from "../fragments/step";
-const secure = "暗号化・完全性保護あり";
+const secure = "暗号化・改ざん検知あり";
 function step(
   id: string,
   phase: string,
@@ -50,7 +50,7 @@ export const interactiveSteps: Step[] = [
     "$ ssh learner@server",
     "client",
     "client",
-    "端末で接続先とユーザー名を指定します。まずサーバーのTCPポート22への接続を始めます。",
+    "端末で接続先とユーザー名を指定します。最初に、サーバーのTCPポート22へ接続します。",
     "端末内の操作",
   ),
   ...createConnection({ phase: "TCP接続" }),
@@ -72,7 +72,7 @@ export const interactiveSteps: Step[] = [
     "CHANNEL_REQUEST · pty-req",
     "client",
     "server",
-    "対話操作のため、サーバーに仮想端末（PTY）の割り当てを要求します。",
+    "対話形式で操作するため、サーバーに仮想端末（PTY）を要求します。",
   ),
   step(
     "pty-ok",
@@ -81,7 +81,7 @@ export const interactiveSteps: Step[] = [
     "SSH_MSG_CHANNEL_SUCCESS",
     "server",
     "client",
-    "サーバーが端末の割り当てを受け付けます。次に、この端末で動くシェルを要求します。",
+    "サーバーは仮想端末の要求を受け付けます。次に、この端末で動かすシェルを要求します。",
   ),
   step(
     "shell",
@@ -90,16 +90,16 @@ export const interactiveSteps: Step[] = [
     "CHANNEL_REQUEST · shell",
     "client",
     "server",
-    "開いたチャネルでシェルの起動を要求します。接続したまま複数のコマンドを入力できます。",
+    "開いたチャネルで、シェルの起動を要求します。シェルを使うと、接続したまま複数のコマンドを入力できます。",
   ),
   step(
     "shell-ok",
     "コマンド操作",
-    "シェルの起動が受け付けられる",
+    "サーバーがシェルの起動を受け付ける",
     "SSH_MSG_CHANNEL_SUCCESS",
     "server",
     "client",
-    "サーバーがシェル起動要求を受け付けます。コマンドを入力できる状態になります。",
+    "サーバーはシェルの起動要求を受け付けます。これでコマンドを入力できます。",
   ),
   step(
     "whoami-input",
@@ -108,7 +108,7 @@ export const interactiveSteps: Step[] = [
     "$ whoami",
     "client",
     "client",
-    "リモートシェルで実行するwhoamiを入力します。この画面では入力をまとめて一つの操作として示します。",
+    "リモートシェルでwhoamiを実行するため、コマンドを入力します。この画面では、入力全体を一つの操作として示します。",
     "端末内の操作",
   ),
   step(
@@ -118,12 +118,12 @@ export const interactiveSteps: Step[] = [
     "CHANNEL_DATA · whoami",
     "client",
     "server",
-    "whoamiと改行をチャネルのデータとして送ります。サーバー側のシェルが受け取り、コマンドを実行します。",
+    "whoamiと改行を、チャネルのデータとして送ります。サーバー側のシェルはデータを受け取り、コマンドを実行します。",
   ),
   existing("output", "コマンド操作", {
     wire: "CHANNEL_DATA · learner",
     description:
-      "サーバーからwhoamiの結果「learner」が返り、端末に表示されます。シェルは終了せず、次の入力を待ちます。",
+      "サーバーはwhoamiの結果「learner」を返します。端末に結果を表示した後も、シェルは次の入力を待ちます。",
   }),
   step(
     "exit-input",
@@ -132,7 +132,7 @@ export const interactiveSteps: Step[] = [
     "$ exit",
     "client",
     "client",
-    "exitを入力して、サーバーで動いているシェルの終了を指示します。",
+    "exitを入力し、サーバーで動いているシェルを終了します。",
     "端末内の操作",
   ),
   step(
@@ -142,17 +142,17 @@ export const interactiveSteps: Step[] = [
     "CHANNEL_DATA · exit",
     "client",
     "server",
-    "exitと改行を送ります。サーバー側のシェルが入力を処理して終了します。",
+    "exitと改行を送ります。サーバー側のシェルは入力を処理し、終了します。",
   ),
   existing("exit-status", "切断", {
     description:
-      "サーバーがシェルの終了コード0を通知します。whoami単体ではなく、対話シェルの終了を知らせる通知です。",
+      "サーバーは、シェルの終了コード0を通知します。これはwhoamiだけでなく、対話シェル全体が終了したことを示します。",
   }),
   existing("eof", "切断"),
   existing("close-s", "切断"),
   existing("close-c", "切断", {
     description:
-      "クライアントもCLOSEを返し、双方でチャネルを閉じます。この例では続けて接続全体を終了します。",
+      "クライアントもCLOSEを返します。双方がCLOSEを送ると、チャネルが閉じます。この例では、続けてSSH接続も終了します。",
   }),
   step(
     "disconnect",
@@ -161,7 +161,7 @@ export const interactiveSteps: Step[] = [
     "SSH_MSG_DISCONNECT",
     "client",
     "server",
-    "クライアントがSSH接続の終了を通知する例です。この後、下位のTCP接続を閉じます。",
+    "クライアントは、SSH接続を終了すると通知します。その後、SSHが使っていたTCP接続も閉じます。",
   ),
   ...createDisconnection({ phase: "切断" }).map((step) => ({
     ...step,
@@ -174,7 +174,7 @@ export const interactiveSteps: Step[] = [
     "Connection closed.",
     "client",
     "client",
-    "ローカル端末に戻りました。TCPはTIME-WAITの待機時間を経てCLOSEDになります。",
+    "操作はローカル端末に戻ります。TCPはTIME-WAITで待った後、CLOSEDへ移ります。",
     "端末内の表示",
   ),
 ];

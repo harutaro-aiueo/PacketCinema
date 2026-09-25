@@ -127,7 +127,7 @@ export function Topology({
           </div>
         ))}
       </dl>
-      <p className="topology-legend">線はデータ転送の状態／● は通信</p>
+      <p className="topology-legend">線：データ転送の状態／●：通信</p>
     </div>
   );
 }

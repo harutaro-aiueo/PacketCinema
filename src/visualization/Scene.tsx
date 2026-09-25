@@ -125,12 +125,12 @@ export function Scene({
               openDetails();
             }}
           >
-            詳しい解説 ↗
+            詳しく見る ↗
           </button>
         </div>
         <div className="stage-bottom">
           {finished
-            ? "すべてのステップが完了しました"
+            ? "すべてのステップが終わりました"
             : paused
               ? "クリックして再開"
               : "クリックして一時停止"}

@@ -16,7 +16,7 @@ for (const scenario of ssh.scenarios) {
     expect(
       steps
         .filter((step) => step.phase.includes("認証"))
-        .every((step) => step.protection === "暗号化・完全性保護あり"),
+        .every((step) => step.protection === "暗号化・改ざん検知あり"),
     ).toBe(true);
     expect(index("password") >= 0).toBe(scenario.id === "exec-password");
     expect(index("key-sign") >= 0).toBe(scenario.id !== "exec-password");

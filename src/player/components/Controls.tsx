@@ -23,7 +23,7 @@ export function Controls({
           最初から
         </button>
         <button disabled={index === 0} onClick={() => seek(index - 1)}>
-          戻る
+          前へ
         </button>
         <button
           className="replay"
@@ -42,7 +42,7 @@ export function Controls({
           次へ
         </button>
         <button disabled={index === total - 1} onClick={() => seek(total - 1)}>
-          最後へ
+          最後に進む
         </button>
       </div>
       <div className="progress">
