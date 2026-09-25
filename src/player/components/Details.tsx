@@ -35,7 +35,7 @@ export function Details({
         ))}
       </ul>
       <a href={current.source} target="_blank" rel="noreferrer">
-        このステップの出典 ↗
+        根拠となる資料 ↗
       </a>
       <p className="model-note">{notes.join(" ")}</p>
     </dialog>

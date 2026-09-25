@@ -61,7 +61,7 @@ export function ProtocolPicker({
           閉じる ×
         </button>
       </div>
-      <label htmlFor="protocol-search">プロトコル名・用途で検索</label>
+      <label htmlFor="protocol-search">名前や用途で教材を検索</label>
       <input
         ref={search}
         id="protocol-search"
@@ -106,7 +106,7 @@ export function ProtocolPicker({
         ))}
         {results.length === 0 && (
           <p className="picker-empty">
-            見つかりませんでした。別の名前や用途で検索してください。
+            教材が見つかりません。別の名前や用途で検索してください。
           </p>
         )}
       </nav>

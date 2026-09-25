@@ -4,7 +4,7 @@ export { createConnection } from "./fragments/connection";
 export { createDisconnection } from "./fragments/disconnection";
 export const tcp: ProtocolDefinition = {
   id: "tcp",
-  description: "3ウェイハンドシェイクで通信の接続を確立する",
+  description: "3ウェイハンドシェイクでTCP接続を確立する",
   keywords: ["接続確立", "ハンドシェイク", "SYN", "ACK", "トランスポート"],
   title: "TCP",
   defaultScenarioId: "handshake",

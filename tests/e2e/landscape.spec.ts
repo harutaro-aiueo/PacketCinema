@@ -48,7 +48,7 @@ for (const size of landscapeSizes) {
     await page.screenshot({ path: test.info().outputPath("mid-transit.png") });
 
     const networkPosition = { x: callout!.x, y: callout!.y };
-    await page.getByRole("button", { name: "戻る" }).click();
+    await page.getByRole("button", { name: "前へ" }).click();
     const localCallout = await page.locator(".callout").boundingBox();
     expect(localCallout).not.toBeNull();
     expect(localCallout).toMatchObject(networkPosition);

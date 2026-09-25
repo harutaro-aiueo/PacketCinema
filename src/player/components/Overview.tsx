@@ -15,14 +15,14 @@ export function Overview({
   return (
     <details className="flow-overview">
       <summary>
-        フロー全体{" "}
+        通信の流れ{" "}
         <span>
           {index + 1} / {steps.length} ステップ
         </span>
       </summary>
-      <nav aria-label="フロー全体のステップ">
+      <nav aria-label="通信の全ステップ">
         <p className="flow-hint">
-          ステップを選ぶと、その場面に移動して一時停止します。
+          ステップを選ぶと、その場面へ移動して一時停止します。
         </p>
         <ol>
           {steps.map((step, i) => (

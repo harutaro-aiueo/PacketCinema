@@ -32,7 +32,7 @@ const disconnection: Step[] = (
       "FIN + ACK",
       "client",
       "server",
-      "クライアントが、これ以上データを送らないことをTCPのFINで伝えます。",
+      "クライアントはFINを送り、データの送信を終えると伝えます。",
     ],
     [
       "fin-ack",
@@ -40,7 +40,7 @@ const disconnection: Step[] = (
       "ACK",
       "server",
       "client",
-      "サーバーがFINの受信を確認します。反対方向はまだ終了していません。",
+      "サーバーはACKを返し、FINの受信を確認します。サーバーからクライアントへの送信は、まだ続けられます。",
     ],
     [
       "fin-s",
@@ -48,7 +48,7 @@ const disconnection: Step[] = (
       "FIN + ACK",
       "server",
       "client",
-      "サーバーもFINを送り、自分からのデータ送信を終了します。",
+      "サーバーもFINを送り、データの送信を終えると伝えます。",
     ],
     [
       "last-ack",
@@ -56,7 +56,7 @@ const disconnection: Step[] = (
       "ACK",
       "client",
       "server",
-      "クライアントが確認応答を返します。サーバーはCLOSEDとなり、クライアントはTIME-WAITに入ります。",
+      "クライアントは最後のACKを返します。サーバーはCLOSEDへ、クライアントはTIME-WAITへ移ります。",
     ],
   ] as const
 ).map(([id, title, wire, from, to, description]) => ({

@@ -56,7 +56,7 @@ test("new protocol with arbitrary node IDs plays without shared UI changes", asy
   await expect(page.locator(".packet")).toHaveCount(0);
   await page.clock.runFor(3300);
   await expect(page.getByRole("status")).toHaveText("再生完了");
-  await page.getByRole("button", { name: "詳しい解説 ↗" }).click();
+  await page.getByRole("button", { name: "詳しく見る ↗" }).click();
   await expect(page.locator(".model-note")).toHaveText(
     "拡張性検証専用の架空教材です。",
   );

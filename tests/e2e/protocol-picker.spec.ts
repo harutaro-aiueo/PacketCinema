@@ -9,7 +9,7 @@ test("searches names and purposes, handles no matches, and navigates", async ({
   await page.getByRole("button", { name: "プロトコルを探す" }).click();
   const dialog = page.getByRole("dialog", { name: "教材を探す" });
   const search = page.getByRole("searchbox", {
-    name: "プロトコル名・用途で検索",
+    name: "名前や用途で教材を検索",
   });
   await expect(search).toBeFocused();
   await search.fill("リモート接続");
@@ -17,7 +17,7 @@ test("searches names and purposes, handles no matches, and navigates", async ({
   await expect(dialog.getByRole("link")).toContainText("SSH");
   await search.fill("存在しない教材");
   await expect(dialog.getByRole("link")).toHaveCount(0);
-  await expect(dialog).toContainText("見つかりませんでした");
+  await expect(dialog).toContainText("教材が見つかりません");
   await search.fill("ｔＣｐ");
   await expect(dialog.getByRole("link")).toHaveCount(1);
   await page.keyboard.press("Tab");

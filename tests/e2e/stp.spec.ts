@@ -23,10 +23,10 @@ test("STP is searchable and BPDU playback pauses and resumes", async ({
   await page.locator(".callout h2").click();
   await page.clock.runFor(500);
   expect(await packet.getAttribute("cx")).not.toBe(position);
-  await page.getByRole("button", { name: "詳しい解説 ↗" }).click();
+  await page.getByRole("button", { name: "詳しく見る ↗" }).click();
   await expect(page.getByRole("dialog")).toContainText("Root Path Cost=0");
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "最後へ" }).click();
+  await page.getByRole("button", { name: "最後に進む" }).click();
   await expect(page.locator('[data-link="ac"]')).toHaveAttribute(
     "data-state",
     "down",

@@ -15,10 +15,10 @@ for (const [width, height] of [
     await expect(page.getByRole("checkbox")).toHaveCount(0);
     await expect(page.locator(".controls button")).toHaveText([
       "最初から",
-      "戻る",
+      "前へ",
       "もう一度",
       "次へ",
-      "最後へ",
+      "最後に進む",
     ]);
     const sizes = await page.locator(".controls button").evaluateAll((nodes) =>
       nodes.map((n) => {
@@ -27,7 +27,7 @@ for (const [width, height] of [
       }),
     );
     expect(new Set(sizes.map((s) => s.join(","))).size).toBe(1);
-    await page.getByRole("button", { name: "最後へ" }).click();
+    await page.getByRole("button", { name: "最後に進む" }).click();
     await expect(page.locator(".scene")).toHaveAttribute("data-step", "done");
     await page.getByRole("button", { name: "最初から" }).click();
     await page.locator(".callout h2").click();
@@ -81,7 +81,7 @@ test("詳細表示で時間が止まり、閉じると再開する。OSの動き
   await page.clock.runFor(1000);
   const p = Number(await page.locator(".packet").getAttribute("data-progress"));
   expect(p).toBeGreaterThan(0);
-  await page.getByRole("button", { name: "詳しい解説 ↗" }).click();
+  await page.getByRole("button", { name: "詳しく見る ↗" }).click();
   const frozen = await page.locator(".packet").getAttribute("data-progress");
   await page.clock.fastForward(15000);
   await expect(page.locator(".packet")).toHaveAttribute(

@@ -17,9 +17,9 @@ const nodes = [
 ];
 const prerequisites = [{ protocol: "tcp", label: "TCP接続済み" }];
 const execNotes = [
-  "SSH 2.0の正常系を示す教育用モデルです。各矢印は論理メッセージであり、TCPパケットと一対一ではありません。",
-  "鍵交換はcurve25519-sha256、ホスト鍵とユーザー鍵は別々のEd25519鍵を使う例です。暗号の推奨設定一覧ではありません。",
-  "拡張交渉、認証方式の探索、再鍵交換、ウィンドウ調整、失敗系、TCP切断は省略しています。実装によりメッセージや順序は異なります。",
+  "SSH 2.0の接続に成功する例です。各矢印はSSHの論理メッセージです。TCPパケットとは一対一に対応しません。",
+  "鍵交換にはcurve25519-sha256を使います。ホスト鍵とユーザー鍵には、それぞれ別のEd25519鍵を使います。暗号方式の推奨一覧ではありません。",
+  "拡張機能の交渉、認証方式の探索、再鍵交換、ウィンドウ調整、失敗時の処理、TCP切断は省略します。実装によって、メッセージや順序は異なります。",
 ];
 const scenarios: Scenario[] = [
   {
@@ -30,7 +30,7 @@ const scenarios: Scenario[] = [
     nodes,
     prerequisites: [],
     notes: [
-      "正常系の一例です。SSHは論理メッセージ単位で、TCPセグメントとの一対一対応ではありません。入力文字・端末エコー・プロンプトをまとめ、再送や失敗系などを省略しています。",
+      "SSH接続に成功する例です。SSHの論理メッセージとTCPセグメントは、一対一に対応しません。入力文字、端末エコー、プロンプトはまとめて表示します。再送や失敗時の処理などは省略します。",
     ],
     steps: interactiveSteps,
   },
@@ -47,7 +47,7 @@ const scenarios: Scenario[] = [
 ];
 export const ssh: ProtocolDefinition = {
   id: "ssh",
-  description: "暗号化された通信でサーバーに接続し、コマンドを実行する",
+  description: "通信を暗号化してサーバーに接続し、コマンドを実行する",
   keywords: ["リモート接続", "ログイン", "暗号化", "認証", "シェル"],
   title: "SSH",
   defaultScenarioId: "interactive",
