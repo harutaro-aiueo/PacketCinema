@@ -52,6 +52,10 @@ defaultScenarioIdは必ず公開対象に含めます。公開しないシナリ
 
 3ノードの三角形では、`topology.links` に一意なID・from/to・labelを持つ3本のリンクを定義します。各ステップの `linkStates` でリンクIDに `pending`・`forwarding`・`blocked`・`down` を指定し、`states` でノードの状態ラベルを指定できます。途中のURLからも復元できるよう、その場面の状態をすべて記述します。例は `src/protocols/stp/scenarios/convergence.ts` を参照してください。
 
+2ノードの両側にLANを描く場合は、`scenario.networks` に各ノード1件ずつ `id`・`node`・`label`・`prefix` を定義します。経路を通知または撤回するメッセージには、`step.networkAction` の `networkId` と `kind: "advertise" | "withdraw"` を指定します。送信元ノードにつながるLANだけを指定できます。LANとルーター間が切れた場面では、`step.networkStates` にLANのIDをキーとして `"down"` を指定します。各ステップの接続状態は独立しているため、切断後の場面にも指定します。例は `src/protocols/bgp/scenarios/peering.ts` を参照してください。
+
+LAN図に経路表を添える場合は、`scenario.routingTables` に表ごとのノード・見出し・初期状態・空欄の文言・初期行を指定します。表を変えるステップでは、`step.routingTables` にノードIDをキーとして、状態と経路行（宛先 `destination`、経路の種類 `learnedVia`、次ホップ `nextHop`）の全件を指定します。指定しない表はその表の初期状態で表示されます。途中URLから開いたときも正しく見えるよう、選択した経路を保持する場面にも同じ行を指定してください。
+
 構成図にノードごとの固定情報を表示する場合は `topology.nodeDetails`、ステップごとに変わる情報は `step.topologyAnnotations.nodeDetails` にノードIDをキーとして指定します。リンク両端のポート役割などは `step.topologyAnnotations.portRoles` にリンクIDをキーとして指定し、`from` と `to` に各端の表示文字列を設定します。不要な場面では省略できます。
 
 それ以外の配置や新しい演出が必要な場合に限り、共通の描画機能を追加します。その際も分岐はプロトコル名ではなく、レイアウトや演出の種類を基準にします。

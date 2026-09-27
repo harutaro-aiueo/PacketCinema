@@ -37,7 +37,11 @@ export function Details({
       <a href={current.source} target="_blank" rel="noreferrer">
         根拠となる資料 ↗
       </a>
-      <p className="model-note">{notes.join(" ")}</p>
+      <div className="model-notes">
+        {notes.map((note, index) => (
+          <p key={index}>{note}</p>
+        ))}
+      </div>
     </dialog>
   );
 }

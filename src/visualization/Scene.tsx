@@ -3,6 +3,8 @@ import { direction, type Scenario, type Step } from "../domain/lesson";
 import { twoNodeLayout } from "./layouts/twoNode";
 import { LocalEffect } from "./effects/LocalEffect";
 import { Topology } from "./Topology";
+import { NetworkDiagram } from "./NetworkDiagram";
+import { RoutingTable } from "./RoutingTable";
 export function Scene({
   scenario,
   current,
@@ -26,6 +28,7 @@ export function Scene({
 }) {
   const local = current.kind === "local";
   const topology = !!scenario.topology;
+  const networkDiagram = !!scenario.networks?.length;
   const layout = topology
     ? {
         side: "client",
@@ -59,13 +62,20 @@ export function Scene({
         <span role="status">{status}</span>
       </div>
       <div
-        className={`stage ${topology ? "topology-stage" : ""} ${!finished ? "can-pause" : ""}`}
+        className={`stage ${topology ? "topology-stage" : ""} ${networkDiagram ? "network-stage" : ""} ${!finished ? "can-pause" : ""}`}
         onClick={() => {
           if (!finished && !window.getSelection()?.toString()) onTogglePause();
         }}
       >
         {topology ? (
           <Topology scenario={scenario} current={current} progress={progress} />
+        ) : networkDiagram ? (
+          <NetworkDiagram
+            scenario={scenario}
+            current={current}
+            progress={progress}
+            travel={x}
+          />
         ) : (
           <>
             <div className="actors">
@@ -98,6 +108,18 @@ export function Scene({
               )}
             </div>
           </>
+        )}
+        {scenario.routingTables && (
+          <div className="routing-tables" aria-label="経路表">
+            {scenario.routingTables.map((config) => (
+              <RoutingTable
+                key={config.node}
+                config={config}
+                snapshot={current.routingTables?.[config.node]}
+                action={current.networkAction?.kind}
+              />
+            ))}
+          </div>
         )}
         <div
           className={`callout ${side} ${local ? "local-step" : ""}`}

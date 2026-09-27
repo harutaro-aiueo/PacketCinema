@@ -98,10 +98,16 @@ dialog a,
 .protection {
   color: #8ff0b4;
 }
-.model-note {
+.model-notes {
   border-top: 2px solid #526b8d;
   padding-top: 12px;
   color: #a6bfd0;
+}
+.model-notes p {
+  margin: 0 0 10px;
+}
+.model-notes p:last-child {
+  margin-bottom: 0;
 }
 @media (max-width: 650px) and (orientation: portrait) {
   .counter {

@@ -15,6 +15,7 @@ it("publishes the available protocol scenarios", () =>
     ["tcp", ["handshake"]],
     ["stp", ["convergence"]],
     ["https", ["tls13-http11"]],
+    ["bgp", ["peering"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(

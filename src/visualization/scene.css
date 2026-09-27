@@ -712,3 +712,474 @@
     line-height: 1.2;
   }
 }
+
+.network-diagram {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  width: min(1060px, 94%);
+  margin: 0;
+  transform: translateX(-50%);
+  color: #d0dfdf;
+}
+.network-path {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) 18px 88px minmax(88px, 0.7fr)
+    88px 18px minmax(0, 1fr);
+  align-items: center;
+  min-width: 0;
+}
+.network-lan,
+.network-router {
+  min-width: 0;
+  height: 72px;
+  padding: 6px 10px;
+  border: 3px solid #a6bfd0;
+  background: #2b4259;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  box-sizing: border-box;
+}
+.network-lan span,
+.network-router small {
+  font-size: 12px;
+  color: #a6bfd0;
+  white-space: nowrap;
+}
+.network-lan code {
+  font:
+    bold 15px Consolas,
+    monospace;
+  white-space: nowrap;
+}
+.network-router strong {
+  font:
+    bold 18px Consolas,
+    monospace;
+  white-space: nowrap;
+}
+.network-lan[data-active="true"] {
+  border-color: #8ff0b4;
+  color: #8ff0b4;
+}
+.network-diagram[data-network-action="withdraw"]
+  .network-lan[data-active="true"] {
+  border-color: #f6cd78;
+  color: #f6cd78;
+}
+.network-lan-link {
+  border-top: 4px solid #a6bfd0;
+}
+.network-lan[data-state="down"] {
+  border-color: #f6cd78;
+  color: #f6cd78;
+}
+.network-lan-link[data-state="down"] {
+  position: relative;
+  border-top-color: #f6cd78;
+}
+.network-lan-link[data-state="down"]:after {
+  content: "×";
+  position: absolute;
+  top: -17px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #f6cd78;
+  background: #141e30;
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: bold;
+}
+.network-router {
+  align-items: center;
+}
+.network-peer-link {
+  position: relative;
+  height: 72px;
+}
+.network-peer-link:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 2px);
+  border-top: 4px dashed #526b8d;
+}
+.network-peer-link[data-action="advertise"]:before {
+  border-color: #8ff0b4;
+}
+.network-peer-link[data-action="withdraw"]:before {
+  border-color: #f6cd78;
+}
+.network-route-arrow {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #8ff0b4;
+  background: #141e30;
+  font:
+    bold 22px Consolas,
+    monospace;
+}
+.network-peer-link[data-action="withdraw"] .network-route-arrow {
+  color: #f6cd78;
+}
+.network-packet {
+  z-index: 2;
+  left: var(--travel);
+  top: 50%;
+  width: 28px;
+  height: 28px;
+}
+.network-packet img {
+  width: 28px;
+  height: 28px;
+}
+.network-diagram-caption {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #a6bfd0;
+  white-space: nowrap;
+}
+.network-diagram[data-network-action="advertise"] .network-diagram-caption {
+  color: #8ff0b4;
+}
+.network-diagram[data-network-action="withdraw"] .network-diagram-caption {
+  color: #f6cd78;
+}
+.network-stage .callout {
+  top: 49%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(680px, 76%);
+  height: auto;
+  min-height: 0;
+  padding: 10px 16px;
+}
+.network-stage .callout:before {
+  display: none;
+}
+.routing-tables {
+  position: absolute;
+  top: 27%;
+  left: 4%;
+  width: 92%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8%;
+}
+.routing-table {
+  min-width: 0;
+  padding: 7px 10px;
+  border: 2px solid #8196ae;
+  background: #132434;
+  color: #d0dfdf;
+  box-sizing: border-box;
+}
+.routing-table table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.routing-table caption {
+  caption-side: top;
+  text-align: left;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+.routing-table caption strong {
+  font-size: 14px;
+}
+.routing-table caption span {
+  float: right;
+  margin-left: 4px;
+  color: #a6bfd0;
+  font-size: 11px;
+}
+.routing-table th,
+.routing-table td {
+  padding: 2px 0;
+  text-align: left;
+  font:
+    12px Consolas,
+    monospace;
+  white-space: nowrap;
+}
+.routing-table th {
+  color: #a6bfd0;
+  border-bottom: 1px solid #526b8d;
+}
+.routing-destination-col {
+  width: 70%;
+}
+.routing-method-col {
+  width: 18%;
+}
+.routing-table td:first-child {
+  font-weight: bold;
+}
+.routing-table[data-filled="true"] tbody {
+  color: #8ff0b4;
+}
+.routing-table[data-action="withdraw"] caption span {
+  color: #f6cd78;
+}
+@media (max-width: 650px) and (orientation: portrait) {
+  .network-diagram {
+    top: 2%;
+    width: 94%;
+  }
+  .network-path {
+    grid-template-columns: minmax(0, 1fr) 4px 30px 24px 30px 4px minmax(0, 1fr);
+  }
+  .network-lan,
+  .network-router {
+    height: 54px;
+    padding: 3px;
+    border-width: 2px;
+  }
+  .network-lan code {
+    font-size: 10px;
+  }
+  .network-router strong {
+    font-size: 13px;
+  }
+  .network-lan span {
+    font-size: 10px;
+  }
+  .network-router small {
+    display: none;
+  }
+  .network-peer-link {
+    height: 54px;
+  }
+  .network-route-arrow {
+    font-size: 17px;
+  }
+  .network-packet,
+  .network-packet img {
+    width: 18px;
+    height: 18px;
+  }
+  .network-diagram-caption {
+    margin-top: 7px;
+    font-size: 11px;
+  }
+  .network-stage .callout {
+    top: max(calc(2% + 132px), 48%);
+    width: 94%;
+    padding: 3px 8px;
+  }
+  .routing-tables {
+    top: max(calc(2% + 80px), 30%);
+    left: 3%;
+    width: 94%;
+    gap: 5px;
+  }
+  .network-stage .routing-table {
+    padding: 2px 5px;
+  }
+  .network-stage .routing-table caption {
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+  .network-stage .routing-table caption strong {
+    display: block;
+    font-size: 10px;
+  }
+  .network-stage .routing-table caption span {
+    display: block;
+    float: none;
+    margin-left: 0;
+    font-size: 9px;
+  }
+  .network-stage .routing-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .network-stage .routing-table th,
+  .network-stage .routing-table td {
+    padding: 0;
+    font:
+      10px/1.1 Consolas,
+      monospace;
+  }
+  .network-stage .routing-table td:first-child {
+    font-weight: bold;
+  }
+  .network-stage .stage-bottom {
+    bottom: 2px;
+  }
+  .network-stage .callout p {
+    font-size: 11px;
+  }
+  .network-stage .callout h2 {
+    font-size: 13px;
+    margin: 4px 0;
+  }
+  .network-stage .callout-meta {
+    margin-bottom: 3px;
+  }
+  .network-stage .enter-line {
+    display: none;
+  }
+}
+@media (orientation: landscape) and (max-height: 480px) {
+  .network-diagram {
+    top: 3%;
+    width: 94%;
+  }
+  .network-path {
+    grid-template-columns:
+      minmax(0, 1fr) 10px 56px minmax(52px, 0.5fr)
+      56px 10px minmax(0, 1fr);
+  }
+  .network-lan,
+  .network-router {
+    height: 44px;
+    padding: 3px 5px;
+    border-width: 2px;
+  }
+  .network-lan code {
+    font-size: 11px;
+  }
+  .network-router strong {
+    font-size: 13px;
+  }
+  .network-lan span,
+  .network-router small {
+    font-size: 10px;
+  }
+  .network-peer-link {
+    height: 44px;
+  }
+  .network-packet,
+  .network-packet img {
+    width: 20px;
+    height: 20px;
+  }
+  .network-diagram-caption {
+    margin-top: 4px;
+    font-size: 11px;
+  }
+  .network-stage .callout {
+    top: 38%;
+    left: 98%;
+    width: 60%;
+    transform: translateX(-100%);
+    padding: 3px 8px;
+  }
+  .network-stage .stage-bottom {
+    bottom: 1px;
+  }
+  .routing-tables {
+    top: 38%;
+    left: 2%;
+    width: 35%;
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .network-stage .routing-table {
+    padding: 2px 5px;
+  }
+  .network-stage .routing-table caption {
+    margin-bottom: 1px;
+  }
+  .network-stage .routing-table caption strong {
+    font-size: 10px;
+  }
+  .network-stage .routing-table caption span {
+    font-size: 9px;
+  }
+  .network-stage .routing-table th,
+  .network-stage .routing-table td {
+    padding: 0;
+    font-size: 9px;
+    line-height: 1.1;
+  }
+  .network-stage .routing-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+@media (min-width: 651px) and (min-height: 481px) and (max-height: 560px) {
+  .network-diagram {
+    top: 0;
+  }
+  .network-lan,
+  .network-router,
+  .network-peer-link {
+    height: 52px;
+  }
+  .network-diagram-caption {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+  .network-stage .callout {
+    top: 30%;
+    left: 98%;
+    width: 60%;
+    transform: translateX(-100%);
+    padding: 6px 10px;
+  }
+  .routing-tables {
+    top: 30%;
+    left: 2%;
+    width: 35%;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .network-stage .routing-table {
+    padding: 3px 5px;
+  }
+  .network-stage .routing-table caption strong {
+    font-size: 10px;
+  }
+  .network-stage .routing-table caption span {
+    font-size: 9px;
+  }
+  .network-stage .routing-table th,
+  .network-stage .routing-table td {
+    font-size: 9px;
+  }
+  .network-stage .routing-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .network-stage .callout h2 {
+    font-size: 13px;
+    margin: 3px 0;
+  }
+  .network-stage .callout p {
+    font-size: 10px;
+    line-height: 1.35;
+  }
+  .network-stage .callout-meta {
+    margin-bottom: 3px;
+  }
+  .network-stage .command-terminal {
+    padding: 4px 8px;
+  }
+}

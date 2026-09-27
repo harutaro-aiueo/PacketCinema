@@ -20,6 +20,25 @@ export type LocalEffect =
       label: string;
     };
 
+export interface RoutingTableEntry {
+  destination: string;
+  learnedVia: string;
+  nextHop: string;
+}
+
+export interface RoutingTableSnapshot {
+  status: string;
+  entries: readonly RoutingTableEntry[];
+}
+
+export interface RoutingTableConfig {
+  node: string;
+  title: string;
+  initialStatus: string;
+  emptyText: string;
+  initialEntries: readonly RoutingTableEntry[];
+}
+
 export interface StepContent {
   id: string;
   phase: string;
@@ -38,6 +57,12 @@ export interface StepContent {
     nodeDetails?: Readonly<Record<string, string>>;
     portRoles?: Readonly<Record<string, { from: string; to: string }>>;
   };
+  networkAction?: {
+    networkId: string;
+    kind: "advertise" | "withdraw";
+  };
+  networkStates?: Readonly<Record<string, "up" | "down">>;
+  routingTables?: Readonly<Record<string, RoutingTableSnapshot>>;
 }
 
 export type Step = StepContent &
@@ -52,6 +77,13 @@ export interface Scenario {
   badge: string;
   sceneLabel: string;
   nodes: readonly LessonNode[];
+  networks?: readonly {
+    id: string;
+    node: string;
+    label: string;
+    prefix: string;
+  }[];
+  routingTables?: readonly RoutingTableConfig[];
   topology?: {
     kind: "triangle";
     links: readonly { id: string; from: string; to: string; label: string }[];

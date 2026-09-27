@@ -24,6 +24,41 @@ export function validateScenario(scenario: Scenario): void {
     `${context} steps`,
   );
   const nodes = new Set(scenario.nodes.map((node) => node.id));
+  const networks = scenario.networks ?? [];
+  unique(
+    networks.map((network) => network.id),
+    `${context} networks`,
+  );
+  for (const network of networks)
+    requireValue(
+      nodes.has(network.node) && network.label.trim() && network.prefix.trim(),
+      `${context}: invalid network`,
+    );
+  const routingTables = scenario.routingTables ?? [];
+  unique(
+    routingTables.map((table) => table.node),
+    `${context} routing tables`,
+  );
+  for (const table of routingTables) {
+    requireValue(
+      networks.length > 0 &&
+        nodes.has(table.node) &&
+        table.title.trim() &&
+        table.initialStatus.trim() &&
+        table.emptyText.trim() &&
+        table.initialEntries.every(
+          (entry) =>
+            entry.destination.trim() &&
+            entry.learnedVia.trim() &&
+            entry.nextHop.trim(),
+        ),
+      `${context}: invalid routing table`,
+    );
+    unique(
+      table.initialEntries.map((entry) => entry.destination),
+      `${context}/${table.node} routing table`,
+    );
+  }
   const links = scenario.topology?.links ?? [];
   unique(
     links.map((link) => link.id),
@@ -48,6 +83,40 @@ export function validateScenario(scenario: Scenario): void {
     requireValue(pairs.size === 3, `${context}: duplicate topology edge`);
   }
   for (const step of scenario.steps) {
+    for (const [node, snapshot] of Object.entries(step.routingTables ?? {})) {
+      requireValue(
+        routingTables.some((table) => table.node === node) &&
+          snapshot.status.trim() &&
+          snapshot.entries.every(
+            (entry) =>
+              entry.destination.trim() &&
+              entry.learnedVia.trim() &&
+              entry.nextHop.trim(),
+          ),
+        `${context}/${step.id}: invalid routing table`,
+      );
+      unique(
+        snapshot.entries.map((entry) => entry.destination),
+        `${context}/${step.id}/${node} routing table`,
+      );
+    }
+    if (step.networkAction) {
+      const network = networks.find(
+        (item) => item.id === step.networkAction?.networkId,
+      );
+      requireValue(
+        network && step.kind === "message" && step.from === network.node,
+        `${context}/${step.id}: invalid network action`,
+      );
+    }
+    requireValue(
+      Object.entries(step.networkStates ?? {}).every(
+        ([id, state]) =>
+          networks.some((network) => network.id === id) &&
+          ["up", "down"].includes(state),
+      ),
+      `${context}/${step.id}: invalid network state`,
+    );
     requireValue(
       Object.entries(step.linkStates ?? {}).every(
         ([id, state]) =>

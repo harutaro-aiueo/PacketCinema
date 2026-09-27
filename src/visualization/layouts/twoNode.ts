@@ -1,11 +1,23 @@
 import type { Scenario, Step } from "../../domain/lesson";
 export function assertSupportedLayout(scenario: Scenario): void {
+  if (scenario.networks?.length && scenario.topology)
+    throw new Error("Network diagram requires two-node layout: " + scenario.id);
   if (scenario.topology?.kind === "triangle" && scenario.nodes.length === 3)
     return;
   if (scenario.nodes.length !== 2)
     throw new Error(
       "Two-node renderer requires exactly 2 nodes: " + scenario.id,
     );
+  if (
+    scenario.networks?.length &&
+    (scenario.networks.length !== 2 ||
+      scenario.nodes.some(
+        (node) =>
+          scenario.networks?.filter((network) => network.node === node.id)
+            .length !== 1,
+      ))
+  )
+    throw new Error("Network diagram needs one LAN per node: " + scenario.id);
 }
 export function twoNodeLayout(
   scenario: Scenario,
