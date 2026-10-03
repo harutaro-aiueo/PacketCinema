@@ -12,12 +12,18 @@
   gap: 12px;
 }
 .home-card {
-  display: block;
+  display: grid;
+  gap: 8px;
   padding: 20px 24px;
   border: 1px solid #35435b;
   border-radius: 4px;
   font-size: 20px;
   color: #8ff0b4;
+}
+.home-card-description {
+  color: #a6bfd0;
+  font-size: 14px;
+  line-height: 1.5;
 }
 .home-card:hover {
   border-color: #8ff0b4;

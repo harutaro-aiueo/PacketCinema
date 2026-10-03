@@ -9,6 +9,10 @@ for (const width of [375, 1280]) {
       "PacketCinema",
     );
     await expect(page.locator(".home-card")).toHaveCount(5);
+    await expect(page.locator(".home-card-description")).toHaveCount(5);
+    await expect(page.locator('.home-card[href="#/dns"]')).toContainText(
+      "名前からIPv4アドレスを調べる",
+    );
     await expect(page.locator(".scene")).toHaveCount(0);
     expect(
       await page.evaluate(
@@ -19,7 +23,7 @@ for (const width of [375, 1280]) {
       path: test.info().outputPath("home.png"),
       fullPage: true,
     });
-    await page.getByRole("link", { name: "TCP", exact: true }).click();
+    await page.getByRole("link", { name: /^TCP/ }).click();
     await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn");
     await page.getByRole("link", { name: "トップページへ戻る" }).click();
     await expect(page.locator(".home")).toBeVisible();
