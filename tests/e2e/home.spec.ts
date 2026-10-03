@@ -8,7 +8,7 @@ for (const width of [375, 1280]) {
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       "PacketCinema",
     );
-    await expect(page.locator(".home-card")).toHaveCount(4);
+    await expect(page.locator(".home-card")).toHaveCount(5);
     await expect(page.locator(".scene")).toHaveCount(0);
     expect(
       await page.evaluate(
