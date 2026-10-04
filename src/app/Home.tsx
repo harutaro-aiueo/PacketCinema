@@ -10,7 +10,13 @@ export function Home({ catalog }: { catalog: readonly ProtocolDefinition[] }) {
           .sort((a, b) => a.title.localeCompare(b.title))
           .map((protocol) => (
             <a className="home-card" href={"#/" + protocol.id} key={protocol.id}>
-              {protocol.title}
+              <span className="home-card-title">{protocol.title}</span>
+              <span className="home-card-description">
+                {protocol.description ??
+                  protocol.scenarios.find(
+                    (scenario) => scenario.id === protocol.defaultScenarioId,
+                  )?.title}
+              </span>
             </a>
           ))}
       </nav>
