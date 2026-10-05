@@ -6,6 +6,7 @@ import { tcp } from "../protocols/tcp";
 import { stp } from "../protocols/stp";
 import { https } from "../protocols/https";
 import { dns } from "../protocols/dns";
+import { arp } from "../protocols/arp";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -37,4 +38,5 @@ export const catalog = createCatalog([
   { protocol: stp, publishedScenarioIds: ["convergence"] },
   { protocol: https, publishedScenarioIds: ["tls13-http11"] },
   { protocol: dns, publishedScenarioIds: ["authoritative-a"] },
+  { protocol: arp, publishedScenarioIds: ["ipv4-ethernet"] },
 ]);
