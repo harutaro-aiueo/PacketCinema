@@ -1,6 +1,6 @@
 # PacketCinema 日次実行プロンプト
 
-以下をCodexのプロジェクト指定の定期タスクに保存する。プロジェクトは`PacketCinema`、実行時刻は日本時間の毎日06:00、各回は独立した実行とする。
+以下をCodexのプロジェクト指定の定期タスクに保存する。プロジェクトは`PacketCinema`、実行時刻は日本時間の毎日06:00・12:00・18:00、各回は独立した実行とする。
 
 ```text
 PacketCinema（harutaro-aiueo/PacketCinema）の新しい教材・機能ページを増やす日次作業を1回実行してください。AGENTS.md、docs/daily-automation.md、docs/git-workflow.mdを先に読み、docs/daily-automation.mdに「Daily automation contract: page-first-v2」がない間は設定PRのマージ待ちとして変更せず報告してください。プロトコル教材には .agents/skills/packetcinema-add-protocol/SKILL.md と docs/adding-protocol.md も適用してください。
