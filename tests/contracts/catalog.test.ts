@@ -17,6 +17,7 @@ it("publishes the available protocol scenarios", () =>
     ["https", ["tls13-http11"]],
     ["dns", ["authoritative-a"]],
     ["arp", ["ipv4-ethernet"]],
+    ["icmp", ["ipv4-echo"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
