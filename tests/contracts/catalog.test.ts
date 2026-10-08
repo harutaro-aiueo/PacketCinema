@@ -19,6 +19,7 @@ it("publishes the available protocol scenarios", () =>
     ["arp", ["ipv4-ethernet"]],
     ["icmp", ["ipv4-echo"]],
     ["dhcp", ["initial-lease"]],
+    ["http-cache", ["etag-revalidation"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(

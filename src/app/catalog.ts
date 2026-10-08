@@ -9,6 +9,7 @@ import { dns } from "../protocols/dns";
 import { arp } from "../protocols/arp";
 import { icmp } from "../protocols/icmp";
 import { dhcp } from "../protocols/dhcp";
+import { httpCache } from "../protocols/http-cache";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -43,4 +44,5 @@ export const catalog = createCatalog([
   { protocol: arp, publishedScenarioIds: ["ipv4-ethernet"] },
   { protocol: icmp, publishedScenarioIds: ["ipv4-echo"] },
   { protocol: dhcp, publishedScenarioIds: ["initial-lease"] },
+  { protocol: httpCache, publishedScenarioIds: ["etag-revalidation"] },
 ]);
