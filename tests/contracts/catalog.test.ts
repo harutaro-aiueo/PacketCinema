@@ -18,6 +18,7 @@ it("publishes the available protocol scenarios", () =>
     ["dns", ["authoritative-a"]],
     ["arp", ["ipv4-ethernet"]],
     ["icmp", ["ipv4-echo"]],
+    ["dhcp", ["initial-lease"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
