@@ -8,6 +8,7 @@ import { https } from "../protocols/https";
 import { dns } from "../protocols/dns";
 import { arp } from "../protocols/arp";
 import { icmp } from "../protocols/icmp";
+import { dhcp } from "../protocols/dhcp";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -41,4 +42,5 @@ export const catalog = createCatalog([
   { protocol: dns, publishedScenarioIds: ["authoritative-a"] },
   { protocol: arp, publishedScenarioIds: ["ipv4-ethernet"] },
   { protocol: icmp, publishedScenarioIds: ["ipv4-echo"] },
+  { protocol: dhcp, publishedScenarioIds: ["initial-lease"] },
 ]);
