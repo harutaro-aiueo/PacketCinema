@@ -21,6 +21,7 @@ it("publishes the available protocol scenarios", () =>
     ["dhcp", ["initial-lease"]],
     ["http-cache", ["etag-revalidation"]],
     ["smtp", ["one-message"]],
+    ["http-redirect", ["post-see-other"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
