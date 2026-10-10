@@ -22,6 +22,7 @@ it("publishes the available protocol scenarios", () =>
     ["http-cache", ["etag-revalidation"]],
     ["smtp", ["one-message"]],
     ["http-redirect", ["post-see-other"]],
+    ["http-basic", ["challenge-response"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
