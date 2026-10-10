@@ -11,6 +11,7 @@ import { icmp } from "../protocols/icmp";
 import { dhcp } from "../protocols/dhcp";
 import { httpCache } from "../protocols/http-cache";
 import { smtp } from "../protocols/smtp";
+import { httpRedirect } from "../protocols/http-redirect";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -47,4 +48,5 @@ export const catalog = createCatalog([
   { protocol: dhcp, publishedScenarioIds: ["initial-lease"] },
   { protocol: httpCache, publishedScenarioIds: ["etag-revalidation"] },
   { protocol: smtp, publishedScenarioIds: ["one-message"] },
+  { protocol: httpRedirect, publishedScenarioIds: ["post-see-other"] },
 ]);
