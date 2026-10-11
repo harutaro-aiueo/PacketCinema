@@ -23,6 +23,7 @@ it("publishes the available protocol scenarios", () =>
     ["smtp", ["one-message"]],
     ["http-redirect", ["post-see-other"]],
     ["http-basic", ["challenge-response"]],
+    ["http-cookie", ["store-and-send"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
