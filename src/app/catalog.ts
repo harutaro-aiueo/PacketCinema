@@ -12,6 +12,7 @@ import { dhcp } from "../protocols/dhcp";
 import { httpCache } from "../protocols/http-cache";
 import { smtp } from "../protocols/smtp";
 import { httpRedirect } from "../protocols/http-redirect";
+import { httpBasic } from "../protocols/http-basic";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -49,4 +50,5 @@ export const catalog = createCatalog([
   { protocol: httpCache, publishedScenarioIds: ["etag-revalidation"] },
   { protocol: smtp, publishedScenarioIds: ["one-message"] },
   { protocol: httpRedirect, publishedScenarioIds: ["post-see-other"] },
+  { protocol: httpBasic, publishedScenarioIds: ["challenge-response"] },
 ]);
