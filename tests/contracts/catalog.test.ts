@@ -24,6 +24,7 @@ it("publishes the available protocol scenarios", () =>
     ["http-redirect", ["post-see-other"]],
     ["http-basic", ["challenge-response"]],
     ["http-cookie", ["store-and-send"]],
+    ["http-range", ["two-byte-ranges"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(

@@ -14,6 +14,7 @@ import { smtp } from "../protocols/smtp";
 import { httpRedirect } from "../protocols/http-redirect";
 import { httpBasic } from "../protocols/http-basic";
 import { httpCookie } from "../protocols/http-cookie";
+import { httpRange } from "../protocols/http-range";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -53,4 +54,5 @@ export const catalog = createCatalog([
   { protocol: httpRedirect, publishedScenarioIds: ["post-see-other"] },
   { protocol: httpBasic, publishedScenarioIds: ["challenge-response"] },
   { protocol: httpCookie, publishedScenarioIds: ["store-and-send"] },
+  { protocol: httpRange, publishedScenarioIds: ["two-byte-ranges"] },
 ]);
