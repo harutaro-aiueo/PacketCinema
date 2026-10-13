@@ -15,6 +15,7 @@ import { httpRedirect } from "../protocols/http-redirect";
 import { httpBasic } from "../protocols/http-basic";
 import { httpCookie } from "../protocols/http-cookie";
 import { httpRange } from "../protocols/http-range";
+import { sntp } from "../protocols/sntp";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -55,4 +56,5 @@ export const catalog = createCatalog([
   { protocol: httpBasic, publishedScenarioIds: ["challenge-response"] },
   { protocol: httpCookie, publishedScenarioIds: ["store-and-send"] },
   { protocol: httpRange, publishedScenarioIds: ["two-byte-ranges"] },
+  { protocol: sntp, publishedScenarioIds: ["unicast-clock"] },
 ]);
