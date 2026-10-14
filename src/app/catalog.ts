@@ -17,6 +17,7 @@ import { httpCookie } from "../protocols/http-cookie";
 import { httpRange } from "../protocols/http-range";
 import { pop3 } from "../protocols/pop3";
 import { sntp } from "../protocols/sntp";
+import { ipv6Nd } from "../protocols/ipv6-nd";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -59,4 +60,5 @@ export const catalog = createCatalog([
   { protocol: httpRange, publishedScenarioIds: ["two-byte-ranges"] },
   { protocol: sntp, publishedScenarioIds: ["unicast-clock"] },
   { protocol: pop3, publishedScenarioIds: ["retrieve-one"] },
+  { protocol: ipv6Nd, publishedScenarioIds: ["neighbor-address"] },
 ]);
