@@ -16,6 +16,7 @@ import { httpBasic } from "../protocols/http-basic";
 import { httpCookie } from "../protocols/http-cookie";
 import { httpRange } from "../protocols/http-range";
 import { pop3 } from "../protocols/pop3";
+import { sntp } from "../protocols/sntp";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -56,5 +57,6 @@ export const catalog = createCatalog([
   { protocol: httpBasic, publishedScenarioIds: ["challenge-response"] },
   { protocol: httpCookie, publishedScenarioIds: ["store-and-send"] },
   { protocol: httpRange, publishedScenarioIds: ["two-byte-ranges"] },
+  { protocol: sntp, publishedScenarioIds: ["unicast-clock"] },
   { protocol: pop3, publishedScenarioIds: ["retrieve-one"] },
 ]);
