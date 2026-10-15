@@ -28,6 +28,7 @@ it("publishes the available protocol scenarios", () =>
     ["sntp", ["unicast-clock"]],
     ["pop3", ["retrieve-one"]],
     ["ipv6-nd", ["neighbor-address"]],
+    ["ftp", ["passive-retrieve"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
