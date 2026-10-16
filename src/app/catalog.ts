@@ -21,6 +21,7 @@ import { ipv6Nd } from "../protocols/ipv6-nd";
 import { ftp } from "../protocols/ftp";
 import { snmpGet } from "../protocols/snmp-get";
 import { sctp } from "../protocols/sctp";
+import { mqtt } from "../protocols/mqtt";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -67,4 +68,5 @@ export const catalog = createCatalog([
   { protocol: ftp, publishedScenarioIds: ["passive-retrieve"] },
   { protocol: snmpGet, publishedScenarioIds: ["uptime-read"] },
   { protocol: sctp, publishedScenarioIds: ["cookie-handshake"] },
+  { protocol: mqtt, publishedScenarioIds: ["qos1-publish"] },
 ]);

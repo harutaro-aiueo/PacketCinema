@@ -31,6 +31,7 @@ it("publishes the available protocol scenarios", () =>
     ["ftp", ["passive-retrieve"]],
     ["snmp-get", ["uptime-read"]],
     ["sctp", ["cookie-handshake"]],
+    ["mqtt", ["qos1-publish"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
