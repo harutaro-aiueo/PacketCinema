@@ -29,6 +29,8 @@ it("publishes the available protocol scenarios", () =>
     ["pop3", ["retrieve-one"]],
     ["ipv6-nd", ["neighbor-address"]],
     ["ftp", ["passive-retrieve"]],
+    ["snmp-get", ["uptime-read"]],
+    ["sctp", ["cookie-handshake"]],
     ["mqtt", ["qos1-publish"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
