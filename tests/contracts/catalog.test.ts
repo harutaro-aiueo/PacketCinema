@@ -30,6 +30,7 @@ it("publishes the available protocol scenarios", () =>
     ["ipv6-nd", ["neighbor-address"]],
     ["ftp", ["passive-retrieve"]],
     ["snmp-get", ["uptime-read"]],
+    ["sctp", ["cookie-handshake"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
