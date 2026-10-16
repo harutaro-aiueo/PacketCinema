@@ -19,6 +19,7 @@ import { pop3 } from "../protocols/pop3";
 import { sntp } from "../protocols/sntp";
 import { ipv6Nd } from "../protocols/ipv6-nd";
 import { ftp } from "../protocols/ftp";
+import { snmpGet } from "../protocols/snmp-get";
 import { sctp } from "../protocols/sctp";
 
 export interface CatalogEntry {
@@ -64,5 +65,6 @@ export const catalog = createCatalog([
   { protocol: pop3, publishedScenarioIds: ["retrieve-one"] },
   { protocol: ipv6Nd, publishedScenarioIds: ["neighbor-address"] },
   { protocol: ftp, publishedScenarioIds: ["passive-retrieve"] },
+  { protocol: snmpGet, publishedScenarioIds: ["uptime-read"] },
   { protocol: sctp, publishedScenarioIds: ["cookie-handshake"] },
 ]);
