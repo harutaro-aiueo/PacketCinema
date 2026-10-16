@@ -32,6 +32,7 @@ it("publishes the available protocol scenarios", () =>
     ["snmp-get", ["uptime-read"]],
     ["sctp", ["cookie-handshake"]],
     ["mqtt", ["qos1-publish"]],
+    ["radius", ["access-accept"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
