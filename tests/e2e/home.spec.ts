@@ -8,8 +8,8 @@ for (const width of [375, 1280]) {
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       "PacketCinema",
     );
-    await expect(page.locator(".home-card")).toHaveCount(21);
-    await expect(page.locator(".home-card-description")).toHaveCount(21);
+    await expect(page.locator(".home-card")).toHaveCount(22);
+    await expect(page.locator(".home-card-description")).toHaveCount(22);
     await expect(page.locator('.home-card[href="#/dns"]')).toContainText(
       "名前からIPv4アドレスを調べる",
     );
