@@ -23,6 +23,7 @@ import { snmpGet } from "../protocols/snmp-get";
 import { sctp } from "../protocols/sctp";
 import { mqtt } from "../protocols/mqtt";
 import { radius } from "../protocols/radius";
+import { ipv4Fragmentation } from "../protocols/ipv4-fragmentation";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -71,4 +72,5 @@ export const catalog = createCatalog([
   { protocol: sctp, publishedScenarioIds: ["cookie-handshake"] },
   { protocol: mqtt, publishedScenarioIds: ["qos1-publish"] },
   { protocol: radius, publishedScenarioIds: ["access-accept"] },
+  { protocol: ipv4Fragmentation, publishedScenarioIds: ["two-fragments"] },
 ]);

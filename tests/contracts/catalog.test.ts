@@ -33,6 +33,7 @@ it("publishes the available protocol scenarios", () =>
     ["sctp", ["cookie-handshake"]],
     ["mqtt", ["qos1-publish"]],
     ["radius", ["access-accept"]],
+    ["ipv4-fragmentation", ["two-fragments"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
