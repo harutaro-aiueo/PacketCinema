@@ -22,6 +22,7 @@ import { ftp } from "../protocols/ftp";
 import { snmpGet } from "../protocols/snmp-get";
 import { sctp } from "../protocols/sctp";
 import { mqtt } from "../protocols/mqtt";
+import { telnet } from "../protocols/telnet";
 import { radius } from "../protocols/radius";
 import { ipv4Fragmentation } from "../protocols/ipv4-fragmentation";
 
@@ -71,6 +72,7 @@ export const catalog = createCatalog([
   { protocol: snmpGet, publishedScenarioIds: ["uptime-read"] },
   { protocol: sctp, publishedScenarioIds: ["cookie-handshake"] },
   { protocol: mqtt, publishedScenarioIds: ["qos1-publish"] },
+  { protocol: telnet, publishedScenarioIds: ["remote-echo"] },
   { protocol: radius, publishedScenarioIds: ["access-accept"] },
   { protocol: ipv4Fragmentation, publishedScenarioIds: ["two-fragments"] },
 ]);

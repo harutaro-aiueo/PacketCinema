@@ -32,6 +32,7 @@ it("publishes the available protocol scenarios", () =>
     ["snmp-get", ["uptime-read"]],
     ["sctp", ["cookie-handshake"]],
     ["mqtt", ["qos1-publish"]],
+    ["telnet", ["remote-echo"]],
     ["radius", ["access-accept"]],
     ["ipv4-fragmentation", ["two-fragments"]],
   ]));
