@@ -1,5 +1,6 @@
 import type { ProtocolDefinition } from "../../domain/lesson";
 import { handshake } from "./scenarios/handshake";
+import { dataRetransmission } from "./scenarios/data-retransmission";
 export { createConnection } from "./fragments/connection";
 export { createDisconnection } from "./fragments/disconnection";
 export const tcp: ProtocolDefinition = {
@@ -8,5 +9,5 @@ export const tcp: ProtocolDefinition = {
   keywords: ["接続確立", "ハンドシェイク", "SYN", "ACK", "トランスポート"],
   title: "TCP",
   defaultScenarioId: "handshake",
-  scenarios: [handshake],
+  scenarios: [handshake, dataRetransmission],
 };
