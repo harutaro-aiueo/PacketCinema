@@ -12,7 +12,7 @@ it("validates published and unpublished scenarios", () =>
 it("publishes the available protocol scenarios", () =>
   expect(catalog.map((p) => [p.id, p.scenarios.map((s) => s.id)])).toEqual([
     ["ssh", ["interactive"]],
-    ["tcp", ["handshake"]],
+    ["tcp", ["handshake", "data-retransmission"]],
     ["stp", ["convergence"]],
     ["https", ["tls13-http11"]],
     ["dns", ["authoritative-a"]],
@@ -28,6 +28,7 @@ it("publishes the available protocol scenarios", () =>
     ["sntp", ["unicast-clock"]],
     ["pop3", ["retrieve-one"]],
     ["ipv6-nd", ["neighbor-address"]],
+    ["ipv6-slaac", ["router-advertisement"]],
     ["ftp", ["passive-retrieve"]],
     ["snmp-get", ["uptime-read"]],
     ["sctp", ["cookie-handshake"]],
