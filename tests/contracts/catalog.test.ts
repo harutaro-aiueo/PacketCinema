@@ -37,6 +37,7 @@ it("publishes the available protocol scenarios", () =>
     ["radius", ["access-accept"]],
     ["ipv4-fragmentation", ["two-fragments"]],
     ["ppp-lcp", ["link-open"]],
+    ["imap", ["select-and-fetch"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
