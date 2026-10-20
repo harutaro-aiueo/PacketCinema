@@ -1,4 +1,5 @@
 import type { ProtocolDefinition, Scenario } from "../../domain/lesson";
+import { recursiveCache } from "./scenarios/recursive-cache";
 
 const message = "https://www.rfc-editor.org/rfc/rfc1035.html#section-4.1";
 const server = "https://www.rfc-editor.org/rfc/rfc1034.html#section-4.3.2";
@@ -132,5 +133,5 @@ export const dns: ProtocolDefinition = {
   description: "名前からIPv4アドレスを調べるDNSの質問と権威ある回答",
   keywords: ["名前解決", "ドメイン名", "Aレコード", "権威サーバー"],
   defaultScenarioId: scenario.id,
-  scenarios: [scenario],
+  scenarios: [scenario, recursiveCache],
 };

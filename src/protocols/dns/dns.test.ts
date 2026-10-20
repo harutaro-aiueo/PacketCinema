@@ -45,3 +45,18 @@ it("uses the same question and transaction ID in the successful answer", () => {
   expect(steps[3].fields).toContain("TTL=300秒");
   expect(steps[4].wire).toContain("192.0.2.10");
 });
+
+it("uses a recursive resolver's valid cached answer with the remaining TTL", () => {
+  const cached = dns.scenarios.find((item) => item.id === "recursive-cache")!;
+  expect(cached.steps.map((step) => step.id)).toEqual([
+    "recursive-query", "cache-hit", "cached-answer", "use-cached-answer",
+  ]);
+  expect(cached.steps[0]).toMatchObject({ kind: "message", from: "client", to: "resolver" });
+  expect(cached.steps[0].fields).toContain("RD=1");
+  expect(cached.steps[1]).toMatchObject({ kind: "local", node: "resolver" });
+  expect(cached.steps[2]).toMatchObject({ kind: "message", from: "resolver", to: "client" });
+  expect(cached.steps[2].fields).toContain("RD=1 / RA=1 / AA=0");
+  expect(cached.steps[2].fields).toContain("TTL=240秒");
+  expect(cached.steps[0].wire).toContain("ID=0x3001");
+  expect(cached.steps[2].wire).toContain("ID=0x3001");
+});
