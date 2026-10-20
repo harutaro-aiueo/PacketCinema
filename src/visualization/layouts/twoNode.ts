@@ -14,7 +14,8 @@ export function twoNodeLayout(
 ) {
   if (scenario.nodes.length !== 2) throw new Error("Expected two nodes");
   const source = step.kind === "local" ? step.node : step.from;
-  const arrived = step.kind === "local" || progress >= 5 / 6;
+  const dropped = step.kind === "message" && step.delivery === "dropped";
+  const arrived = step.kind === "local" || (!dropped && progress >= 5 / 6);
   const active = step.kind === "local" || !arrived ? source : step.to;
   const side = (id: string) =>
     id === scenario.nodes[0].id ? "client" : "server";
@@ -25,7 +26,7 @@ export function twoNodeLayout(
     sourceSide: side(source),
     travel:
       side(source) === "client"
-        ? 12 + 76 * Math.min(1, progress * 1.2)
-        : 88 - 76 * Math.min(1, progress * 1.2),
+        ? 12 + 76 * Math.min(dropped ? 0.5 : 1, progress * 1.2)
+        : 88 - 76 * Math.min(dropped ? 0.5 : 1, progress * 1.2),
   };
 }

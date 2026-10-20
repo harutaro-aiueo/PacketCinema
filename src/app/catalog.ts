@@ -54,7 +54,7 @@ export function createCatalog(
 }
 export const catalog = createCatalog([
   { protocol: ssh, publishedScenarioIds: ["interactive"] },
-  { protocol: tcp, publishedScenarioIds: ["handshake"] },
+  { protocol: tcp, publishedScenarioIds: ["handshake", "data-retransmission"] },
   { protocol: stp, publishedScenarioIds: ["convergence"] },
   { protocol: https, publishedScenarioIds: ["tls13-http11"] },
   { protocol: dns, publishedScenarioIds: ["authoritative-a"] },

@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { createConnection, createDisconnection } from "./index";
+import { createConnection, createDisconnection, tcp } from "./index";
 it("keeps TCP sequence numbers and states", () => {
   const steps = createConnection();
   expect(steps.map((s) => s.wire)).toEqual(["SYN", "SYN + ACK", "ACK"]);
@@ -9,6 +9,20 @@ it("keeps TCP sequence numbers and states", () => {
     client: "ESTABLISHED",
     server: "ESTABLISHED",
   });
+});
+it("keeps data sequence and ACK numbers across timeout retransmission", () => {
+  const steps = tcp.scenarios.find((scenario) => scenario.id === "data-retransmission")!.steps;
+  expect(steps.map((step) => step.id)).toEqual([
+    "syn", "syn-ack", "ack", "data-first", "ack-first",
+    "data-lost", "timeout", "data-retry", "ack-retry",
+  ]);
+  expect(steps[5]).toMatchObject({
+    kind: "message", delivery: "dropped", from: "client", to: "server",
+    states: { client: "ACK待ち", server: "ESTABLISHED" },
+  });
+  expect(steps[5].fields).toContain("SEQ=1005");
+  expect(steps[7].fields).toContain("SEQ=1005（再送）");
+  expect(steps[8].fields).toContain("ACK=1009");
 });
 it("composes independent fragments with remapped nodes and IDs", () => {
   const options = {
