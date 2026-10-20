@@ -3,6 +3,7 @@ import { validateProtocols } from "../domain/lesson/validate";
 import { assertSupportedLayout } from "../visualization/layouts/twoNode";
 import { ssh } from "../protocols/ssh";
 import { tcp } from "../protocols/tcp";
+import { udp } from "../protocols/udp";
 import { stp } from "../protocols/stp";
 import { https } from "../protocols/https";
 import { dns } from "../protocols/dns";
@@ -56,6 +57,7 @@ export function createCatalog(
 export const catalog = createCatalog([
   { protocol: ssh, publishedScenarioIds: ["interactive"] },
   { protocol: tcp, publishedScenarioIds: ["handshake", "data-retransmission"] },
+  { protocol: udp, publishedScenarioIds: ["ipv4-datagram"] },
   { protocol: stp, publishedScenarioIds: ["convergence"] },
   { protocol: https, publishedScenarioIds: ["tls13-http11"] },
   { protocol: dns, publishedScenarioIds: ["authoritative-a"] },

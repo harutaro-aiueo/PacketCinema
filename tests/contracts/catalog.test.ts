@@ -13,6 +13,7 @@ it("publishes the available protocol scenarios", () =>
   expect(catalog.map((p) => [p.id, p.scenarios.map((s) => s.id)])).toEqual([
     ["ssh", ["interactive"]],
     ["tcp", ["handshake", "data-retransmission"]],
+    ["udp", ["ipv4-datagram"]],
     ["stp", ["convergence"]],
     ["https", ["tls13-http11"]],
     ["dns", ["authoritative-a"]],
