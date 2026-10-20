@@ -6,7 +6,7 @@ import {
 } from "../../src/domain/lesson/validate";
 import { ssh } from "../../src/protocols/ssh";
 import { tcp } from "../../src/protocols/tcp";
-import { example, threeNode } from "../fixtures/example";
+import { example, pathExample, threeNode } from "../fixtures/example";
 it("validates published and unpublished scenarios", () =>
   expect(() => validateProtocols([ssh, tcp])).not.toThrow());
 it("publishes the available protocol scenarios", () =>
@@ -53,6 +53,14 @@ it("models three nodes but rejects publication before renderer support", () => {
       { protocol: threeNode, publishedScenarioIds: ["roundtrip"] },
     ]),
   ).toThrow("exactly 2 nodes");
+});
+it("publishes a three-node path and rejects a skipped hop", () => {
+  expect(() => createCatalog([{ protocol: pathExample, publishedScenarioIds: ["roundtrip"] }])).not.toThrow();
+  const scenario = pathExample.scenarios[0];
+  expect(() => validateScenario({
+    ...scenario,
+    steps: [{ ...scenario.steps[0], to: "responder" }],
+  })).toThrow("message needs a direct path link");
 });
 it("rejects invalid publication lists", () => {
   for (const ids of [

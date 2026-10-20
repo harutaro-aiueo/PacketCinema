@@ -1,0 +1,31 @@
+.topology.path svg {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 650px) and (orientation: portrait) {
+  .topology-stage .topology.path {
+    left: 5%;
+    width: 90%;
+    display: flex;
+  }
+
+  .topology-stage .topology.path svg {
+    height: 55%;
+  }
+
+  .topology.path .topology-states {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .topology.path .topology-states > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .topology.path .topology-node > text {
+    font-size: 12px;
+  }
+}

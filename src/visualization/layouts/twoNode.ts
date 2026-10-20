@@ -1,6 +1,6 @@
 import type { Scenario, Step } from "../../domain/lesson";
 export function assertSupportedLayout(scenario: Scenario): void {
-  if (scenario.topology?.kind === "triangle" && scenario.nodes.length === 3)
+  if (scenario.topology && scenario.nodes.length === 3)
     return;
   if (scenario.nodes.length !== 2)
     throw new Error(

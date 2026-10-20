@@ -53,7 +53,7 @@ export interface Scenario {
   sceneLabel: string;
   nodes: readonly LessonNode[];
   topology?: {
-    kind: "triangle";
+    kind: "triangle" | "path";
     links: readonly { id: string; from: string; to: string; label: string }[];
     nodeDetails?: Readonly<Record<string, string>>;
   };
