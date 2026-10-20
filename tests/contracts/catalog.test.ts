@@ -28,6 +28,7 @@ it("publishes the available protocol scenarios", () =>
     ["sntp", ["unicast-clock"]],
     ["pop3", ["retrieve-one"]],
     ["ipv6-nd", ["neighbor-address"]],
+    ["ipv6-slaac", ["router-advertisement"]],
     ["ftp", ["passive-retrieve"]],
     ["snmp-get", ["uptime-read"]],
     ["sctp", ["cookie-handshake"]],
