@@ -25,6 +25,7 @@ export function Scene({
   children: React.ReactNode;
 }) {
   const local = current.kind === "local";
+  const dropped = current.kind === "message" && current.delivery === "dropped";
   const topology = !!scenario.topology;
   const layout = topology
     ? {
@@ -43,6 +44,8 @@ export function Scene({
       ? "一時停止"
       : local
         ? "端末内の操作"
+        : dropped && progress >= 0.5
+          ? "途中で消失"
         : layout.arrived
           ? "到着"
           : "送信中";
@@ -87,7 +90,7 @@ export function Scene({
             </div>
             <div className="wire">
               <div className="route" />
-              {!local && (
+              {!local && !(dropped && progress >= 0.5) && (
                 <span
                   className="packet"
                   data-progress={progress}

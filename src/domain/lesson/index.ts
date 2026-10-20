@@ -42,7 +42,7 @@ export interface StepContent {
 
 export type Step = StepContent &
   (
-    | { kind: "message"; from: string; to: string }
+    | { kind: "message"; from: string; to: string; delivery?: "dropped" }
     | { kind: "local"; node: string; effect: LocalEffect }
   );
 
