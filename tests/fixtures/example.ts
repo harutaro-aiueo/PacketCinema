@@ -1,4 +1,4 @@
-import type { ProtocolDefinition, Scenario } from "../../src/domain/lesson";
+import type { ProtocolDefinition, Scenario, Step } from "../../src/domain/lesson";
 const scenario: Scenario = {
   id: "roundtrip",
   title: "架空プロトコル",
@@ -95,4 +95,31 @@ export const threeNode: ProtocolDefinition = {
       ),
     },
   ],
+};
+export const pathExample: ProtocolDefinition = {
+  ...example,
+  id: "path-example",
+  defaultScenarioId: "roundtrip",
+  scenarios: [{
+    ...scenario,
+    title: "3ノード経路",
+    sceneLabel: "端末 → 中継 → 宛先",
+    nodes: [
+      scenario.nodes[0],
+      { id: "relay", label: "RELAY", caption: "中継", image: "./pixels/server.svg" },
+      scenario.nodes[1],
+    ],
+    topology: {
+      kind: "path",
+      links: [
+        { id: "first", from: "reader", to: "relay", label: "最初のリンク" },
+        { id: "second", from: "relay", to: "responder", label: "次のリンク" },
+      ],
+    },
+    steps: [
+      { ...(scenario.steps[0] as Extract<Step, { kind: "message" }>), to: "relay" },
+      { ...(scenario.steps[0] as Extract<Step, { kind: "message" }>), id: "forward", from: "relay", to: "responder", title: "中継する" },
+      scenario.steps[2],
+    ],
+  }],
 };

@@ -1,9 +1,15 @@
 import type { Scenario, Step } from "../domain/lesson";
+import "./path.css";
 
-const positions = [
+const trianglePositions = [
   { x: 150, y: 36 },
   { x: 48, y: 150 },
   { x: 252, y: 150 },
+];
+const pathPositions = [
+  { x: 48, y: 100 },
+  { x: 150, y: 100 },
+  { x: 252, y: 100 },
 ];
 export function Topology({
   scenario,
@@ -14,6 +20,8 @@ export function Topology({
   current: Step;
   progress: number;
 }) {
+  const path = scenario.topology?.kind === "path";
+  const positions = path ? pathPositions : trianglePositions;
   const point = (id: string) =>
     positions[scenario.nodes.findIndex((node) => node.id === id)];
   const from = point(current.kind === "local" ? current.node : current.from);
@@ -26,18 +34,18 @@ export function Topology({
         ? current.from
         : current.to;
   return (
-    <div className="topology">
+    <div className={`topology ${path ? "path" : "triangle"}`}>
       <svg
-        viewBox="0 0 300 202"
+        viewBox={path ? "0 55 300 90" : "0 0 300 202"}
         role="img"
-        aria-label="3台のスイッチとリンクの状態"
+        aria-label="3台のノードとリンクの状態"
       >
         {scenario.topology!.links.map((link) => {
           const a = point(link.from),
             b = point(link.to);
           const state = current.linkStates?.[link.id] ?? "pending";
           const label = {
-            pending: "待機",
+            pending: path ? "接続" : "待機",
             forwarding: "転送",
             blocked: "遮断",
             down: "断線",
@@ -91,7 +99,7 @@ export function Topology({
               {current.topologyAnnotations?.nodeDetails?.[node.id]
                 ? ` · ${current.topologyAnnotations.nodeDetails[node.id]}`
                 : ""}
-              {` · ${current.states?.[node.id] ?? "選出前"}`}
+              {` · ${current.states?.[node.id] ?? (path ? node.caption : "選出前")}`}
             </title>
             <rect x="-37" y="-26" width="74" height="52" rx="3" />
             <text y="-10">{node.label}</text>
@@ -119,7 +127,7 @@ export function Topology({
           </circle>
         )}
       </svg>
-      <dl className="topology-states" aria-label="各スイッチの状態">
+      <dl className="topology-states" aria-label="各ノードの状態">
         {scenario.nodes.map((node) => (
           <div key={node.id}>
             <dt>{node.label}</dt>
@@ -127,7 +135,9 @@ export function Topology({
           </div>
         ))}
       </dl>
-      <p className="topology-legend">線：データ転送の状態／●：通信</p>
+      <p className="topology-legend">
+        {path ? "線：リンクの状態／●：通信" : "線：データ転送の状態／●：通信"}
+      </p>
     </div>
   );
 }

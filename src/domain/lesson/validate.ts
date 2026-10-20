@@ -31,8 +31,9 @@ export function validateScenario(scenario: Scenario): void {
   );
   if (scenario.topology) {
     requireValue(
-      scenario.nodes.length === 3 && links.length === 3,
-      `${context}: triangle needs three nodes and links`,
+      scenario.nodes.length === 3 &&
+        links.length === (scenario.topology.kind === "triangle" ? 3 : 2),
+      `${context}: topology needs three nodes and the expected links`,
     );
     const pairs = new Set<string>();
     for (const link of links) {
@@ -45,7 +46,14 @@ export function validateScenario(scenario: Scenario): void {
       );
       pairs.add([link.from, link.to].sort().join("/"));
     }
-    requireValue(pairs.size === 3, `${context}: duplicate topology edge`);
+    requireValue(pairs.size === links.length, `${context}: duplicate topology edge`);
+    if (scenario.topology.kind === "path") {
+      const middle = scenario.nodes[1].id;
+      requireValue(
+        links.every((link) => link.from === middle || link.to === middle),
+        `${context}: path links must meet at the middle node`,
+      );
+    }
   }
   for (const step of scenario.steps) {
     requireValue(
@@ -85,6 +93,15 @@ export function validateScenario(scenario: Scenario): void {
       requireValue(
         step.from !== step.to,
         `${context}/${step.id}: use a local step`,
+      );
+    if (step.kind === "message" && scenario.topology?.kind === "path")
+      requireValue(
+        links.some(
+          (link) =>
+            (link.from === step.from && link.to === step.to) ||
+            (link.from === step.to && link.to === step.from),
+        ),
+        `${context}/${step.id}: message needs a direct path link`,
       );
     if (step.kind === "local" && step.effect.kind === "stages") {
       requireValue(
