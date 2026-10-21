@@ -46,3 +46,21 @@ it("publishes the initial lease sequence with matching transaction and address",
   );
   expect(steps[4].fields).toContain("状態=BOUND");
 });
+
+it("renews the existing lease by unicast request and returns to BOUND", () => {
+  const renewal = dhcp.scenarios.find((item) => item.id === "lease-renewal");
+  expect(renewal).toBeDefined();
+  expect(renewal?.steps.map((step) => step.id)).toEqual([
+    "leased", "t1", "renew-request", "renew-ack", "renewed",
+  ]);
+  expect(renewal?.steps.map((step) => step.kind === "message" ? `${step.from}->${step.to}` : `local:${step.node}`)).toEqual([
+    "local:client", "local:client", "client->server", "server->client", "local:client",
+  ]);
+  expect(renewal?.steps[2].fields).toEqual(expect.arrayContaining([
+    "ciaddr=192.0.2.10", "Option 54=なし", "Option 50=なし", "xid=0x87654321",
+  ]));
+  expect(renewal?.steps[3].fields).toEqual(expect.arrayContaining([
+    "yiaddr=192.0.2.10", "Option 51=3600秒", "xid=0x87654321",
+  ]));
+  expect(renewal?.steps[4].fields).toContain("状態=BOUND");
+});
