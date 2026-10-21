@@ -29,6 +29,7 @@ import { radius } from "../protocols/radius";
 import { ipv4Fragmentation } from "../protocols/ipv4-fragmentation";
 import { pppLcp } from "../protocols/ppp-lcp";
 import { imap } from "../protocols/imap";
+import { napt } from "../protocols/napt";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -83,4 +84,5 @@ export const catalog = createCatalog([
   { protocol: ipv4Fragmentation, publishedScenarioIds: ["two-fragments"] },
   { protocol: pppLcp, publishedScenarioIds: ["link-open"] },
   { protocol: imap, publishedScenarioIds: ["select-and-fetch"] },
+  { protocol: napt, publishedScenarioIds: ["udp-outbound"] },
 ]);

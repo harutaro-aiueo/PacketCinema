@@ -39,6 +39,7 @@ it("publishes the available protocol scenarios", () =>
     ["ipv4-fragmentation", ["two-fragments"]],
     ["ppp-lcp", ["link-open"]],
     ["imap", ["select-and-fetch"]],
+    ["napt", ["udp-outbound"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
