@@ -30,6 +30,7 @@ import { ipv4Fragmentation } from "../protocols/ipv4-fragmentation";
 import { pppLcp } from "../protocols/ppp-lcp";
 import { imap } from "../protocols/imap";
 import { napt } from "../protocols/napt";
+import { ethernet } from "../protocols/ethernet";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -85,4 +86,5 @@ export const catalog = createCatalog([
   { protocol: pppLcp, publishedScenarioIds: ["link-open"] },
   { protocol: imap, publishedScenarioIds: ["select-and-fetch"] },
   { protocol: napt, publishedScenarioIds: ["udp-outbound"] },
+  { protocol: ethernet, publishedScenarioIds: ["same-vlan", "different-vlan"] },
 ]);
