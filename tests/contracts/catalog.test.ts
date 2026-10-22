@@ -40,6 +40,7 @@ it("publishes the available protocol scenarios", () =>
     ["ppp-lcp", ["link-open"]],
     ["imap", ["select-and-fetch"]],
     ["napt", ["udp-outbound"]],
+    ["ethernet", ["same-vlan", "different-vlan"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(
