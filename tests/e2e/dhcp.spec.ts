@@ -47,3 +47,29 @@ for (const [width, height] of [
     expect(overflow).toBe(false);
   });
 }
+
+test("DHCP renewal restores request and return to BOUND", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/#/dhcp?scenario=lease-renewal&step=2");
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "renew-request");
+  await page.reload();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "renew-request");
+  await page.getByRole("button", { name: "最後に進む" }).click();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "renewed");
+});
+
+for (const [width, height] of [[320, 568], [1280, 720], [844, 390]]) {
+  test(`DHCP renewal fits ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await page.goto("/#/dhcp?scenario=lease-renewal&step=2");
+    await expect(page.locator(".scene")).toHaveAttribute("data-step", "renew-request");
+    const overflow = await page.evaluate(() =>
+      document.documentElement.scrollWidth > innerWidth ||
+      [...document.querySelectorAll(".scene, .callout, .controls")].some((el) => {
+        const box = el.getBoundingClientRect();
+        return box.left < 0 || box.right > innerWidth || el.scrollHeight > el.clientHeight + 2;
+      }),
+    );
+    expect(overflow).toBe(false);
+  });
+}
