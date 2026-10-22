@@ -16,7 +16,7 @@ it("publishes the available protocol scenarios", () =>
     ["udp", ["ipv4-datagram"]],
     ["stp", ["convergence"]],
     ["https", ["tls13-http11"]],
-    ["dns", ["authoritative-a", "recursive-cache"]],
+    ["dns", ["authoritative-a", "recursive-cache", "negative-cache"]],
     ["arp", ["ipv4-ethernet"]],
     ["icmp", ["ipv4-echo"]],
     ["dhcp", ["initial-lease", "lease-renewal"]],

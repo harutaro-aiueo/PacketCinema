@@ -87,3 +87,37 @@ for (const [width, height] of [[320, 568], [1280, 720], [844, 390]]) {
     await page.screenshot({ path: test.info().outputPath("dns-recursive-cache.png"), fullPage: true });
   });
 }
+
+test("negative DNS cache restores NXDOMAIN and SOA details", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/#/dns?scenario=negative-cache");
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "ask-missing");
+  await page.getByRole("button", { name: "次へ", exact: true }).click();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "find-negative");
+  await page.goto("/#/dns?scenario=negative-cache&step=2");
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "cached-nxdomain");
+  await page.reload();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "cached-nxdomain");
+  await page.getByRole("button", { name: "詳しく見る ↗" }).click();
+  await expect(page.getByRole("dialog")).toContainText("SOA / TTL=180秒");
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "最後に進む" }).click();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "no-address");
+});
+
+for (const [width, height] of [[320, 568], [1280, 720], [844, 390]]) {
+  test(`negative DNS cache fits ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await page.goto("/#/dns?scenario=negative-cache&step=2");
+    await expect(page.locator(".scene")).toHaveAttribute("data-step", "cached-nxdomain");
+    const overflow = await page.evaluate(() =>
+      document.documentElement.scrollWidth > innerWidth ||
+      [...document.querySelectorAll(".scene, .callout, .controls")].some((el) => {
+        const box = el.getBoundingClientRect();
+        return box.left < 0 || box.right > innerWidth || el.scrollHeight > el.clientHeight + 2;
+      }),
+    );
+    expect(overflow).toBe(false);
+    await page.screenshot({ path: test.info().outputPath("dns-negative-cache.png"), fullPage: true });
+  });
+}

@@ -60,3 +60,18 @@ it("uses a recursive resolver's valid cached answer with the remaining TTL", () 
   expect(cached.steps[0].wire).toContain("ID=0x3001");
   expect(cached.steps[2].wire).toContain("ID=0x3001");
 });
+
+it("returns a cached NXDOMAIN with the remaining SOA TTL", () => {
+  const missing = dns.scenarios.find((item) => item.id === "negative-cache")!;
+  expect(missing.steps.map((step) => step.id)).toEqual([
+    "ask-missing", "find-negative", "cached-nxdomain", "no-address",
+  ]);
+  expect(missing.steps[0]).toMatchObject({ kind: "message", from: "client", to: "resolver" });
+  expect(missing.steps[1]).toMatchObject({ kind: "local", node: "resolver" });
+  expect(missing.steps[2]).toMatchObject({ kind: "message", from: "resolver", to: "client" });
+  expect(missing.steps[0].wire).toContain("ID=0x3002");
+  expect(missing.steps[2].wire).toContain("ID=0x3002");
+  expect(missing.steps[2].fields).toContain("QR=1 / ID=0x3002 / RCODE=3（NXDOMAIN）");
+  expect(missing.steps[2].fields).toContain("Authority：example.test. SOA / TTL=180秒");
+  expect(missing.steps[3].fields).toContain("Aレコード：なし");
+});
