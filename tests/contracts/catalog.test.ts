@@ -19,7 +19,7 @@ it("publishes the available protocol scenarios", () =>
     ["dns", ["authoritative-a", "recursive-cache", "negative-cache"]],
     ["arp", ["ipv4-ethernet"]],
     ["icmp", ["ipv4-echo"]],
-    ["dhcp", ["initial-lease"]],
+    ["dhcp", ["initial-lease", "lease-renewal"]],
     ["http-cache", ["etag-revalidation"]],
     ["smtp", ["one-message"]],
     ["http-redirect", ["post-see-other"]],
@@ -40,6 +40,7 @@ it("publishes the available protocol scenarios", () =>
     ["ppp-lcp", ["link-open"]],
     ["imap", ["select-and-fetch"]],
     ["napt", ["udp-outbound"]],
+    ["ethernet", ["same-vlan", "different-vlan"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
   expect(

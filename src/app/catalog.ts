@@ -30,6 +30,7 @@ import { ipv4Fragmentation } from "../protocols/ipv4-fragmentation";
 import { pppLcp } from "../protocols/ppp-lcp";
 import { imap } from "../protocols/imap";
 import { napt } from "../protocols/napt";
+import { ethernet } from "../protocols/ethernet";
 
 export interface CatalogEntry {
   protocol: ProtocolDefinition;
@@ -64,7 +65,7 @@ export const catalog = createCatalog([
   { protocol: dns, publishedScenarioIds: ["authoritative-a", "recursive-cache", "negative-cache"] },
   { protocol: arp, publishedScenarioIds: ["ipv4-ethernet"] },
   { protocol: icmp, publishedScenarioIds: ["ipv4-echo"] },
-  { protocol: dhcp, publishedScenarioIds: ["initial-lease"] },
+  { protocol: dhcp, publishedScenarioIds: ["initial-lease", "lease-renewal"] },
   { protocol: httpCache, publishedScenarioIds: ["etag-revalidation"] },
   { protocol: smtp, publishedScenarioIds: ["one-message"] },
   { protocol: httpRedirect, publishedScenarioIds: ["post-see-other"] },
@@ -85,4 +86,5 @@ export const catalog = createCatalog([
   { protocol: pppLcp, publishedScenarioIds: ["link-open"] },
   { protocol: imap, publishedScenarioIds: ["select-and-fetch"] },
   { protocol: napt, publishedScenarioIds: ["udp-outbound"] },
+  { protocol: ethernet, publishedScenarioIds: ["same-vlan", "different-vlan"] },
 ]);
