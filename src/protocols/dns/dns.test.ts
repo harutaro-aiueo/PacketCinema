@@ -1,6 +1,8 @@
 import { expect, it } from "vitest";
 import { dns } from "./index";
 import { createCatalog } from "../../app/catalog";
+import { tcp } from "../tcp";
+import { udp } from "../udp";
 
 const scenario = dns.scenarios[0];
 const steps = scenario.steps;
@@ -9,6 +11,8 @@ it("publishes a direct, non-recursive authoritative A lookup", () => {
   expect(() =>
     createCatalog([
       { protocol: dns, publishedScenarioIds: ["authoritative-a"] },
+      { protocol: tcp, publishedScenarioIds: ["handshake"] },
+      { protocol: udp, publishedScenarioIds: ["ipv4-datagram"] },
     ]),
   ).not.toThrow();
   expect(steps.map((step) => step.id)).toEqual([
@@ -74,4 +78,19 @@ it("returns a cached NXDOMAIN with the remaining SOA TTL", () => {
   expect(missing.steps[2].fields).toContain("QR=1 / ID=0x3002 / RCODE=3（NXDOMAIN）");
   expect(missing.steps[2].fields).toContain("Authority：example.test. SOA / TTL=180秒");
   expect(missing.steps[3].fields).toContain("Aレコード：なし");
+});
+
+it("retries a truncated UDP answer over TCP with a complete response", () => {
+  const fallback = dns.scenarios.find((item) => item.id === "tcp-fallback")!;
+  expect(fallback.steps.map((step) => step.id)).toEqual([
+    "udp-query", "truncated", "choose-tcp", "tcp-syn", "tcp-syn-ack", "tcp-ack",
+    "tcp-query", "tcp-answer", "use-complete-answer",
+  ]);
+  expect(fallback.steps[1]).toMatchObject({ kind: "message", from: "resolver", to: "client" });
+  expect(fallback.steps[1].fields).toContain("TC=1：切り詰め");
+  expect(fallback.steps[6]).toMatchObject({ kind: "message", from: "client", to: "resolver" });
+  expect(fallback.steps[6].fields).toContain("QR=0 / ID=0x3004 / RD=1");
+  expect(fallback.steps[7]).toMatchObject({ kind: "message", from: "resolver", to: "client" });
+  expect(fallback.steps[7].fields).toContain("QR=1 / ID=0x3004 / TC=0");
+  expect(fallback.steps[7].fields).toContain("同じTCP接続で返信");
 });
