@@ -80,6 +80,7 @@ function LessonPlayer({
         <Scene
           scenario={scenario}
           current={current}
+          detailsOpen={details}
           {...playback}
           onTogglePause={() => playback.setPaused((value) => !value)}
           openDetails={() => {
