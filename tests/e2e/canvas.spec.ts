@@ -91,6 +91,7 @@ test("詳細表示で時間が止まり、閉じると再開する。OSの動き
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).not.toBeVisible();
+  await expect(page.getByRole("button", { name: "詳しく見る ↗" })).toHaveAttribute("aria-expanded", "false");
   const frozenProgress = Number(frozen);
   let resumedProgress = frozenProgress;
   for (
@@ -99,9 +100,7 @@ test("詳細表示で時間が止まり、閉じると再開する。OSの動き
     attempt++
   ) {
     await page.clock.runFor(250);
-    await page.evaluate(
-      () => new Promise<void>((resolve) => queueMicrotask(resolve)),
-    );
+    await page.waitForTimeout(50);
     resumedProgress = Number(
       await page.locator(".packet").getAttribute("data-progress"),
     );
