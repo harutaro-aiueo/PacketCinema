@@ -27,6 +27,7 @@ import { mqtt } from "../protocols/mqtt";
 import { telnet } from "../protocols/telnet";
 import { radius } from "../protocols/radius";
 import { ipv4Fragmentation } from "../protocols/ipv4-fragmentation";
+import { ipv4Forwarding } from "../protocols/ipv4-forwarding";
 import { pppLcp } from "../protocols/ppp-lcp";
 import { imap } from "../protocols/imap";
 import { napt } from "../protocols/napt";
@@ -83,6 +84,7 @@ export const catalog = createCatalog([
   { protocol: telnet, publishedScenarioIds: ["remote-echo"] },
   { protocol: radius, publishedScenarioIds: ["access-accept"] },
   { protocol: ipv4Fragmentation, publishedScenarioIds: ["two-fragments"] },
+  { protocol: ipv4Forwarding, publishedScenarioIds: ["direct-and-gateway"] },
   { protocol: pppLcp, publishedScenarioIds: ["link-open"] },
   { protocol: imap, publishedScenarioIds: ["select-and-fetch"] },
   { protocol: napt, publishedScenarioIds: ["udp-outbound"] },
