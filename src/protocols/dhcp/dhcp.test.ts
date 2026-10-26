@@ -64,3 +64,17 @@ it("renews the existing lease by unicast request and returns to BOUND", () => {
   ]));
   expect(renewal?.steps[4].fields).toContain("状態=BOUND");
 });
+
+it("rebinding broadcasts after T2 and stops using the address at expiry", () => {
+  const fallback = dhcp.scenarios.find((item) => item.id === "rebinding-expiry");
+  expect(fallback?.steps.map((step) => step.id)).toEqual([
+    "leased", "t1", "renew-request", "t2", "rebind-request", "expired",
+  ]);
+  expect(fallback?.steps.map((step) => step.kind === "message" ? `${step.from}->${step.to}` : `local:${step.node}`)).toEqual([
+    "local:client", "local:client", "client->server", "local:client", "client->server", "local:client",
+  ]);
+  expect(fallback?.steps[2].wire).toContain("192.0.2.1:67");
+  expect(fallback?.steps[4].wire).toContain("255.255.255.255:67");
+  expect(fallback?.steps[4].fields).toContain("Option 54=なし");
+  expect(fallback?.steps[5].fields).toContain("旧アドレスは利用停止");
+});
