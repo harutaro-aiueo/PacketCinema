@@ -24,6 +24,21 @@ it("keeps data sequence and ACK numbers across timeout retransmission", () => {
   expect(steps[7].fields).toContain("SEQ=1005（再送）");
   expect(steps[8].fields).toContain("ACK=1009");
 });
+it("closes each TCP direction separately and retains TIME-WAIT", () => {
+  const steps = tcp.scenarios.find((scenario) => scenario.id === "normal-close")!.steps;
+  expect(steps.map((step) => step.id)).toEqual([
+    "client-fin", "client-fin-ack", "server-data", "server-data-ack",
+    "server-fin", "server-fin-ack", "time-wait-end",
+  ]);
+  expect(steps[0].states).toEqual({ client: "FIN-WAIT-1", server: "CLOSE-WAIT" });
+  expect(steps[1].states).toEqual({ client: "FIN-WAIT-2", server: "CLOSE-WAIT" });
+  expect(steps[2]).toMatchObject({ kind: "message", from: "server", to: "client" });
+  expect(steps[3].fields).toContain("ACK=5005");
+  expect(steps[4].fields).toContain("SEQ=5005");
+  expect(steps[5].fields).toContain("ACK=5006");
+  expect(steps[5].states).toEqual({ client: "TIME-WAIT", server: "CLOSED" });
+  expect(steps[6].states).toEqual({ client: "CLOSED", server: "CLOSED" });
+});
 it("composes independent fragments with remapped nodes and IDs", () => {
   const options = {
     nodes: { client: "browser", server: "proxy" },
