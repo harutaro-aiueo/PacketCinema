@@ -58,14 +58,14 @@ export function createCatalog(
 }
 export const catalog = createCatalog([
   { protocol: ssh, publishedScenarioIds: ["interactive"] },
-  { protocol: tcp, publishedScenarioIds: ["handshake", "data-retransmission"] },
+  { protocol: tcp, publishedScenarioIds: ["handshake", "data-retransmission", "normal-close"] },
   { protocol: udp, publishedScenarioIds: ["ipv4-datagram"] },
   { protocol: stp, publishedScenarioIds: ["convergence"] },
   { protocol: https, publishedScenarioIds: ["tls13-http11"] },
-  { protocol: dns, publishedScenarioIds: ["authoritative-a", "recursive-cache", "negative-cache"] },
+  { protocol: dns, publishedScenarioIds: ["authoritative-a", "recursive-cache", "negative-cache", "tcp-fallback"] },
   { protocol: arp, publishedScenarioIds: ["ipv4-ethernet"] },
   { protocol: icmp, publishedScenarioIds: ["ipv4-echo", "udp-port-unreachable"] },
-  { protocol: dhcp, publishedScenarioIds: ["initial-lease", "lease-renewal"] },
+  { protocol: dhcp, publishedScenarioIds: ["initial-lease", "lease-renewal", "rebinding-expiry"] },
   { protocol: httpCache, publishedScenarioIds: ["etag-revalidation"] },
   { protocol: smtp, publishedScenarioIds: ["one-message"] },
   { protocol: httpRedirect, publishedScenarioIds: ["post-see-other"] },
