@@ -19,8 +19,9 @@ test("searches names and purposes, handles no matches, and navigates", async ({
   await expect(dialog.getByRole("link")).toHaveCount(0);
   await expect(dialog).toContainText("教材が見つかりません");
   await search.fill("ｔＣｐ");
-  await expect(dialog.getByRole("link")).toHaveCount(1);
+  await expect(dialog.getByRole("link")).toHaveCount(2);
   await page.keyboard.press("Tab");
+  await expect(dialog.getByRole("link", { name: /^TCP/ })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(dialog).not.toBeVisible();
   await expect(page.locator(".scene")).toHaveAttribute("data-step", "syn");
