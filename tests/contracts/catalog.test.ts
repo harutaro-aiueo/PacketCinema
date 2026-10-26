@@ -12,14 +12,14 @@ it("validates published and unpublished scenarios", () =>
 it("publishes the available protocol scenarios", () =>
   expect(catalog.map((p) => [p.id, p.scenarios.map((s) => s.id)])).toEqual([
     ["ssh", ["interactive"]],
-    ["tcp", ["handshake", "data-retransmission"]],
+    ["tcp", ["handshake", "data-retransmission", "normal-close"]],
     ["udp", ["ipv4-datagram"]],
     ["stp", ["convergence"]],
     ["https", ["tls13-http11"]],
-    ["dns", ["authoritative-a", "recursive-cache", "negative-cache"]],
+    ["dns", ["authoritative-a", "recursive-cache", "negative-cache", "tcp-fallback"]],
     ["arp", ["ipv4-ethernet"]],
     ["icmp", ["ipv4-echo"]],
-    ["dhcp", ["initial-lease", "lease-renewal"]],
+    ["dhcp", ["initial-lease", "lease-renewal", "rebinding-expiry"]],
     ["http-cache", ["etag-revalidation"]],
     ["smtp", ["one-message"]],
     ["http-redirect", ["post-see-other"]],

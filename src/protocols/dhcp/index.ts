@@ -196,11 +196,78 @@ const renewalScenario: Scenario = {
   ],
 };
 
+const rebindingScenario: Scenario = {
+  id: "rebinding-expiry",
+  title: "DHCP：更新失敗",
+  badge: "DHCP / 期限",
+  sceneLabel: "端末 ↔ DHCPサーバー",
+  nodes: [
+    { id: "client", label: "端末", caption: "192.0.2.10を利用中", image: "./pixels/client.svg" },
+    { id: "server", label: "DHCPサーバー", caption: "192.0.2.1", image: "./pixels/server.svg" },
+  ],
+  prerequisites: [{ protocol: "dhcp", label: "IPv4アドレスの新規取得" }],
+  notes: [
+    "3600秒のリースを持つ端末にACKが届かない例です。192.0.2.0/24は文書用の架空のネットワークです。T1=1800秒、T2=3150秒は既定値で、実際の値はサーバーが指定できます。",
+    "T1では元のサーバーへ直接要求し、T2ではどのサーバーにも届くようブロードキャストします。図のサーバーは元の1台だけを描き、他のサーバーやリレーは省略します。矢印は論理的な要求を示します。",
+    "途中の再送と待ち時間は省略します。返信が届かないことを架空の返信パケットとしては描きません。期限切れ後の新規取得も扱いません。アニメーションの時間は実測時間ではありません。",
+  ],
+  steps: [
+    {
+      kind: "local", node: "client", id: "leased", phase: "利用中", title: "借りたアドレスを使う",
+      wire: "192.0.2.10 · BOUND · リース3600秒",
+      description: "端末は192.0.2.10を借りて通信しています。リースの期限より前に更新を試みます。",
+      fields: ["状態=BOUND", "IPv4アドレス=192.0.2.10", "リース時間=3600秒"],
+      protection: "端末内の状態", source: renewal,
+      effect: { kind: "result", text: "BOUND", prompt: "状態：", pending: "リースを確認中", complete: "利用中", label: "端末の状態" },
+    },
+    {
+      kind: "local", node: "client", id: "t1", phase: "更新開始", title: "T1で元のサーバーに頼む",
+      wire: "T1=1800秒 · RENEWING",
+      description: "T1でRENEWING状態へ移ります。この例では更新を始める時刻を1800秒とします。",
+      fields: ["状態=RENEWING", "T1=1800秒", "T2=3150秒"],
+      protection: "端末内の状態", source: renewal,
+      effect: { kind: "result", text: "RENEWING", prompt: "状態：", pending: "T1を確認中", complete: "更新を開始", label: "端末の状態" },
+    },
+    {
+      kind: "message", from: "client", to: "server", id: "renew-request", phase: "直接要求", title: "元のサーバーへ直接送る",
+      wire: "DHCPREQUEST · 192.0.2.10:68 → 192.0.2.1:67 · xid=0x87654321",
+      displayWire: "DHCPREQUEST · 直接送信",
+      description: "端末は現在のアドレスをciaddrに入れ、元のサーバーへユニキャストします。この例ではACKが届きません。",
+      fields: ["Option 53=DHCPREQUEST", "ciaddr=192.0.2.10", "Option 54=なし", "xid=0x87654321"],
+      protection: "この例のDHCP通信は暗号化されません。", source: renewal,
+    },
+    {
+      kind: "local", node: "client", id: "t2", phase: "再要求", title: "T2で送信先を広げる",
+      wire: "T2=3150秒 · REBINDING",
+      description: "T2までACKが届かなかったため、端末はREBINDING状態へ移ります。元のサーバー以外からも更新を受けられるようにします。",
+      fields: ["状態=REBINDING", "T2=3150秒", "期限=3600秒"],
+      protection: "端末内の状態", source: renewal,
+      effect: { kind: "result", text: "REBINDING", prompt: "状態：", pending: "T2を確認中", complete: "送信先を拡大", label: "端末の状態" },
+    },
+    {
+      kind: "message", from: "client", to: "server", id: "rebind-request", phase: "一斉要求", title: "LANへブロードキャストする",
+      wire: "DHCPREQUEST · 192.0.2.10:68 → 255.255.255.255:67 · xid=0x87654322",
+      displayWire: "DHCPREQUEST · 一斉送信",
+      description: "端末は今のアドレスをciaddrに入れ、LANへブロードキャストします。図では元のサーバー1台だけを描いていますが、他のサーバーも応答できます。",
+      fields: ["Option 53=DHCPREQUEST", "ciaddr=192.0.2.10", "Option 54=なし", "xid=0x87654322"],
+      protection: "この例のDHCP通信は暗号化されません。", source: renewal,
+    },
+    {
+      kind: "local", node: "client", id: "expired", phase: "期限切れ", title: "旧アドレスの利用を止める",
+      wire: "リース満了 · INIT",
+      description: "期限までにACKが届かなかったためINIT状態へ戻り、192.0.2.10を使った通信を止めます。新しい設定の取得を始めます。",
+      fields: ["状態=INIT", "旧アドレスは利用停止", "新規取得を開始"],
+      protection: "端末内の状態", source: renewal,
+      effect: { kind: "result", text: "INIT", prompt: "状態：", pending: "期限を確認中", complete: "旧アドレスを停止", label: "端末の状態" },
+    },
+  ],
+};
+
 export const dhcp: ProtocolDefinition = {
   id: "dhcp",
   title: "DHCP",
   description: "IPv4アドレスを探して借りるDiscover・Offer・Request・ACK",
   keywords: ["IPアドレス", "自動設定", "リース", "DORA"],
   defaultScenarioId: scenario.id,
-  scenarios: [scenario, renewalScenario],
+  scenarios: [scenario, renewalScenario, rebindingScenario],
 };
