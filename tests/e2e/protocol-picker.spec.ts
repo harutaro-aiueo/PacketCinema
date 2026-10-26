@@ -49,6 +49,7 @@ test("picker suspends the clock and restores focus and the prior playback state"
   await expect(
     page.getByRole("dialog", { name: "教材を探す" }),
   ).not.toBeVisible();
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
   // Native dialog close events and React effects settle between clock advances.
   const frozenProgress = Number(progress);
   let resumedProgress = frozenProgress;
@@ -58,9 +59,7 @@ test("picker suspends the clock and restores focus and the prior playback state"
     attempt++
   ) {
     await page.clock.runFor(250);
-    await page.evaluate(
-      () => new Promise<void>((resolve) => queueMicrotask(resolve)),
-    );
+    await page.waitForTimeout(50);
     resumedProgress = Number(
       await page.locator(".packet").getAttribute("data-progress"),
     );

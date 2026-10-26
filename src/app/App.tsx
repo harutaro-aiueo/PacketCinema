@@ -67,6 +67,7 @@ function LessonPlayer({
             className="protocol-trigger"
             aria-label="プロトコルを探す"
             aria-haspopup="dialog"
+            aria-expanded={pickerOpen}
             onClick={() => setPickerOpen(true)}
           >
             教材を探す
@@ -79,6 +80,7 @@ function LessonPlayer({
         <Scene
           scenario={scenario}
           current={current}
+          detailsOpen={details}
           {...playback}
           onTogglePause={() => playback.setPaused((value) => !value)}
           openDetails={() => {
