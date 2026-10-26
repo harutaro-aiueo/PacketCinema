@@ -19,7 +19,7 @@ it("publishes the available protocol scenarios", () =>
     ["dns", ["authoritative-a", "recursive-cache", "negative-cache", "tcp-fallback"]],
     ["arp", ["ipv4-ethernet"]],
     ["icmp", ["ipv4-echo"]],
-    ["dhcp", ["initial-lease", "lease-renewal"]],
+    ["dhcp", ["initial-lease", "lease-renewal", "rebinding-expiry"]],
     ["http-cache", ["etag-revalidation"]],
     ["smtp", ["one-message"]],
     ["http-redirect", ["post-see-other"]],
