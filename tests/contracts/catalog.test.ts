@@ -37,6 +37,7 @@ it("publishes the available protocol scenarios", () =>
     ["telnet", ["remote-echo"]],
     ["radius", ["access-accept"]],
     ["ipv4-fragmentation", ["two-fragments"]],
+    ["ipv4-forwarding", ["direct-and-gateway"]],
     ["ppp-lcp", ["link-open"]],
     ["imap", ["select-and-fetch"]],
     ["napt", ["udp-outbound"]],
