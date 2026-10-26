@@ -6,6 +6,7 @@ import { Topology } from "./Topology";
 export function Scene({
   scenario,
   current,
+  detailsOpen,
   progress,
   duration,
   paused,
@@ -16,6 +17,7 @@ export function Scene({
 }: {
   scenario: Scenario;
   current: Step;
+  detailsOpen: boolean;
   progress: number;
   duration: number;
   paused: boolean;
@@ -123,6 +125,7 @@ export function Scene({
           <p>{summary}</p>
           <button
             className="detail-button"
+            aria-expanded={detailsOpen}
             onClick={(e) => {
               e.stopPropagation();
               openDetails();
