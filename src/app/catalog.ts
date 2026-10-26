@@ -64,7 +64,7 @@ export const catalog = createCatalog([
   { protocol: https, publishedScenarioIds: ["tls13-http11"] },
   { protocol: dns, publishedScenarioIds: ["authoritative-a", "recursive-cache", "negative-cache"] },
   { protocol: arp, publishedScenarioIds: ["ipv4-ethernet"] },
-  { protocol: icmp, publishedScenarioIds: ["ipv4-echo"] },
+  { protocol: icmp, publishedScenarioIds: ["ipv4-echo", "udp-port-unreachable"] },
   { protocol: dhcp, publishedScenarioIds: ["initial-lease", "lease-renewal"] },
   { protocol: httpCache, publishedScenarioIds: ["etag-revalidation"] },
   { protocol: smtp, publishedScenarioIds: ["one-message"] },

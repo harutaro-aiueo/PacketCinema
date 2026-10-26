@@ -28,12 +28,43 @@ for (const [width, height] of [[320, 568], [1280, 720], [844, 390]]) {
     await expect(page.locator(".scene")).toHaveAttribute("data-step", "reply");
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth > innerWidth ||
-        [...document.querySelectorAll(".scene, .callout, .controls")].some((el) => {
+        [...document.querySelectorAll(".scene, .callout, .controls, .masthead > *")].some((el) => {
           const box = el.getBoundingClientRect();
           return box.left < 0 || box.right > innerWidth || el.scrollHeight > el.clientHeight + 2;
         }),
     );
     expect(overflow).toBe(false);
     await page.screenshot({ path: test.info().outputPath("icmp.png"), fullPage: true });
+  });
+}
+
+test("ICMP port unreachable restores its error message and related UDP send", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/#/icmp?scenario=udp-port-unreachable&step=3");
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "unreachable");
+  await page.getByRole("button", { name: "詳しく見る ↗" }).click();
+  await expect(page.getByRole("dialog")).toContainText("ICMP Type：3 / Code：3");
+  await expect(page.getByRole("dialog")).toContainText("引用内UDP：53000 → 9999");
+  await page.keyboard.press("Escape");
+  await page.reload();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "unreachable");
+  await page.getByRole("button", { name: "最後に進む" }).click();
+  await expect(page.locator(".scene")).toHaveAttribute("data-step", "report-error");
+});
+
+for (const [width, height] of [[320, 568], [1280, 720], [844, 390]]) {
+  test("ICMP port unreachable layout fits " + width + "x" + height, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await page.goto("/#/icmp?scenario=udp-port-unreachable&step=3");
+    await expect(page.locator(".scene")).toHaveAttribute("data-step", "unreachable");
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > innerWidth ||
+        [...document.querySelectorAll(".scene, .callout, .controls, .masthead > *")].some((el) => {
+          const box = el.getBoundingClientRect();
+          return box.left < 0 || box.right > innerWidth || el.scrollHeight > el.clientHeight + 2;
+        }),
+    );
+    expect(overflow).toBe(false);
+    await page.screenshot({ path: test.info().outputPath("icmp-unreachable.png"), fullPage: true });
   });
 }
