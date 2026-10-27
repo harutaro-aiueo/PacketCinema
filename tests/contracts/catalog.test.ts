@@ -18,7 +18,7 @@ it("publishes the available protocol scenarios", () =>
     ["https", ["tls13-http11"]],
     ["dns", ["authoritative-a", "recursive-cache", "negative-cache", "tcp-fallback"]],
     ["arp", ["ipv4-ethernet"]],
-    ["icmp", ["ipv4-echo", "udp-port-unreachable"]],
+    ["icmp", ["ipv4-echo", "udp-port-unreachable", "ttl-exceeded"]],
     ["dhcp", ["initial-lease", "lease-renewal", "rebinding-expiry"]],
     ["http-cache", ["etag-revalidation"]],
     ["smtp", ["one-message"]],

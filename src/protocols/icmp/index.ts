@@ -1,4 +1,5 @@
 import type { ProtocolDefinition, Scenario } from "../../domain/lesson";
+import { ttlExceeded } from "./scenarios/ttl-exceeded";
 
 const rfc792 = "https://www.rfc-editor.org/rfc/rfc792.html#page-14";
 const rfc1122 = "https://www.rfc-editor.org/rfc/rfc1122.html#section-3.2.2.6";
@@ -137,7 +138,7 @@ const portUnreachable: Scenario = {
 
 export const icmp: ProtocolDefinition = {
   id: "icmp", title: "ICMP",
-  description: "Echo応答とUDP宛先ポートの到達不能通知を学ぶ",
-  keywords: ["ping", "疎通確認", "Echo", "応答", "ポート到達不能", "UDP", "エラー"],
-  defaultScenarioId: scenario.id, scenarios: [scenario, portUnreachable],
+  description: "Echo応答、UDPポート到達不能、TTL切れの通知を学ぶ",
+  keywords: ["ping", "疎通確認", "Echo", "応答", "ポート到達不能", "UDP", "エラー", "TTL", "経路"],
+  defaultScenarioId: scenario.id, scenarios: [scenario, portUnreachable, ttlExceeded],
 };

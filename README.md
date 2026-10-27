@@ -24,6 +24,7 @@ PacketCinemaは、ネットワークの仕組みをパケットの動きと解�
 | TCP | 接続確立、データの確認と損失再送、FIN・ACKによる正常終了 | `#/tcp`、`#/tcp?scenario=data-retransmission`、`#/tcp?scenario=normal-close` |
 | STP | 3台のスイッチのBPDU交換、ルート選出、ポート状態の遷移、リンク断後の再収束 | `#/stp` |
 | IPv4の転送 | 同一サブネットへの直接送信、ゲートウェイと次ホップの選択、リンクごとのMACの違い | `#/ipv4-forwarding` |
+| ICMP | Echo応答、UDPポート到達不能、ルーターでのTTL切れ通知 | `#/icmp`、`#/icmp?scenario=ttl-exceeded` |
 
 SSHでは、`ssh learner@server` の入力から `whoami` の結果を受け取り、`exit` で端末へ戻るまでをたどります。STPでは、ループを防ぐために経路がどう選ばれ、障害時にどう切り替わるのかを16ステップで見ていきます。
 
