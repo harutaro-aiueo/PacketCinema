@@ -87,6 +87,6 @@ export const catalog = createCatalog([
   { protocol: ipv4Forwarding, publishedScenarioIds: ["direct-and-gateway"] },
   { protocol: pppLcp, publishedScenarioIds: ["link-open"] },
   { protocol: imap, publishedScenarioIds: ["select-and-fetch"] },
-  { protocol: napt, publishedScenarioIds: ["udp-outbound"] },
+  { protocol: napt, publishedScenarioIds: ["udp-outbound", "tcp-outbound"] },
   { protocol: ethernet, publishedScenarioIds: ["same-vlan", "different-vlan"] },
 ]);
