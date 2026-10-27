@@ -12,7 +12,7 @@ it("validates published and unpublished scenarios", () =>
 it("publishes the available protocol scenarios", () =>
   expect(catalog.map((p) => [p.id, p.scenarios.map((s) => s.id)])).toEqual([
     ["ssh", ["interactive"]],
-    ["tcp", ["handshake", "data-retransmission", "normal-close"]],
+    ["tcp", ["handshake", "data-retransmission", "flow-control", "normal-close"]],
     ["udp", ["ipv4-datagram"]],
     ["stp", ["convergence"]],
     ["https", ["tls13-http11"]],
