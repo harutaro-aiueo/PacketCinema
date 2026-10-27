@@ -1,4 +1,5 @@
 import type { ProtocolDefinition, Scenario } from "../../domain/lesson";
+import { tcpOutbound } from "./scenarios/tcp-outbound";
 
 const overview = "https://www.rfc-editor.org/rfc/rfc3022.html#section-2.2";
 const translation = "https://www.rfc-editor.org/rfc/rfc3022.html#section-4.1";
@@ -117,5 +118,5 @@ export const napt: ProtocolDefinition = {
   id: "napt", title: "NAPT",
   description: "家庭内端末の通信を、ルーターの外側アドレスとポートへ変換する",
   keywords: ["NAT", "IPマスカレード", "ポート変換", "家庭内LAN"],
-  defaultScenarioId: scenario.id, scenarios: [scenario],
+  defaultScenarioId: scenario.id, scenarios: [scenario, tcpOutbound],
 };

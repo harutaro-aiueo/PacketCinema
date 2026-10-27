@@ -40,7 +40,7 @@ it("publishes the available protocol scenarios", () =>
     ["ipv4-forwarding", ["direct-and-gateway"]],
     ["ppp-lcp", ["link-open"]],
     ["imap", ["select-and-fetch"]],
-    ["napt", ["udp-outbound"]],
+    ["napt", ["udp-outbound", "tcp-outbound"]],
     ["ethernet", ["same-vlan", "different-vlan"]],
   ]));
 it("accepts independent protocols without renderer changes", () =>
