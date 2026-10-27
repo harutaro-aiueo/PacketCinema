@@ -24,6 +24,20 @@ it("keeps data sequence and ACK numbers across timeout retransmission", () => {
   expect(steps[7].fields).toContain("SEQ=1005（再送）");
   expect(steps[8].fields).toContain("ACK=1009");
 });
+it("stops new data at zero receive window and resumes after an update", () => {
+  const steps = tcp.scenarios.find((scenario) => scenario.id === "flow-control")!.steps;
+  expect(steps.map((step) => step.id)).toEqual([
+    "window-four", "fill-window", "window-zero", "pause-send",
+    "app-read", "window-update", "send-after-update", "ack-after-update",
+  ]);
+  expect(steps[0].fields).toContain("受信可能：1001〜1004");
+  expect(steps[2].fields).toContain("広告ウィンドウ=0バイト");
+  expect(steps[3]).toMatchObject({ kind: "local", node: "client" });
+  expect(steps[5]).toMatchObject({ kind: "message", from: "server", to: "client" });
+  expect(steps[5].fields).toContain("ACK=1005（変化なし）");
+  expect(steps[6].fields).toContain("SEQ=1005");
+  expect(steps[7].fields).toContain("ACK=1009：1005〜1008を確認");
+});
 it("closes each TCP direction separately and retains TIME-WAIT", () => {
   const steps = tcp.scenarios.find((scenario) => scenario.id === "normal-close")!.steps;
   expect(steps.map((step) => step.id)).toEqual([
